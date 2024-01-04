@@ -5,6 +5,10 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.util.Log
+import androidx.compose.ui.text.style.TextAlign
+import androidx.lifecycle.MutableLiveData
+import androidx.wear.compose.material.Text
 
 
 class Sensores (private var sensorManager: SensorManager ) {
@@ -24,10 +28,12 @@ class Sensores (private var sensorManager: SensorManager ) {
 
     private var pulsoCardiaco = 0f
 
+    val liveDataAcelerometro = MutableLiveData<AcelerometroDatos>()
+
 
     init {
         val acelerometro = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        sensores += acelerometro
+        //sensores += acelerometro
 
         val acelerometroListener = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent) {
@@ -35,7 +41,7 @@ class Sensores (private var sensorManager: SensorManager ) {
             }
 
             override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-                TODO("Not yet implemented")
+                //TODO("Not yet implemented")
             }
         }
 
@@ -44,22 +50,23 @@ class Sensores (private var sensorManager: SensorManager ) {
         listener += acelerometroListener
 
         val giroscopio = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-        sensores += giroscopio
+        //sensores += giroscopio
 
         val giroscopioListener = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent) {
+                Log.d("tfg","el evento es " + event.values[0])
                 procesarDatosGiroscopio(event)
             }
 
             override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-                TODO("Not yet implemented")
+                //TODO("Not yet implemented")
             }
         }
         sensorManager.registerListener(giroscopioListener, giroscopio, SensorManager.SENSOR_DELAY_GAME)
         listener += giroscopioListener
 
         val frecuenciaCardiaca = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-        sensores += frecuenciaCardiaca
+        //sensores += frecuenciaCardiaca
 
         val frecuenciaListener = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent) {
@@ -67,7 +74,7 @@ class Sensores (private var sensorManager: SensorManager ) {
             }
 
             override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-                TODO("Not yet implemented")
+                //TODO("Not yet implemented")
             }
         }
         sensorManager.registerListener(frecuenciaListener, frecuenciaCardiaca, SensorManager.SENSOR_DELAY_GAME)
@@ -89,13 +96,15 @@ class Sensores (private var sensorManager: SensorManager ) {
     }
 
     private fun procesarDatosAcelerometro(event: SensorEvent) {
-        acelerometroDatosAnteriores.ejeX = giroscopioDatosActuales.ejeX
-        acelerometroDatosAnteriores.ejeY = giroscopioDatosActuales.ejeY
-        acelerometroDatosAnteriores.ejeZ = giroscopioDatosActuales.ejeZ
+        acelerometroDatosAnteriores.ejeX = acelerometroDatosActuales.ejeX
+        acelerometroDatosAnteriores.ejeY = acelerometroDatosActuales.ejeY
+        acelerometroDatosAnteriores.ejeZ = acelerometroDatosActuales.ejeZ
 
-        giroscopioDatosActuales.ejeX = event.values[0]
-        giroscopioDatosActuales.ejeX = event.values[1]
-        giroscopioDatosActuales.ejeX = event.values[2]
+        acelerometroDatosActuales.ejeX = event.values[0]
+        acelerometroDatosActuales.ejeX = event.values[1]
+        acelerometroDatosActuales.ejeX = event.values[2]
+
+        liveDataAcelerometro.postValue(acelerometroDatosActuales)
     }
 
 

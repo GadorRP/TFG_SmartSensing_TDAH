@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.aplicaciontfg"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.aplicaciontfg"
@@ -49,7 +49,7 @@ android {
 }
 
 dependencies {
-
+    implementation("com.mutualmobile:composesensors:1.1.2")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("com.google.android.gms:play-services-wearable:18.1.0")
     implementation("androidx.percentlayout:percentlayout:1.0.0")

@@ -6,11 +6,11 @@
 
 package com.example.aplicaciontfg.presentation
 
-import android.content.Context
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
+import android.Manifest
+import android.app.Activity
+import android.content.pm.PackageManager
 import android.hardware.SensorManager
+import android.hardware.SensorManager.SENSOR_DELAY_GAME
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -26,24 +26,31 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.MutableLiveData
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.example.aplicaciontfg.R
 import com.example.aplicaciontfg.presentation.theme.AplicacionTFGTheme
-import java.util.Timer
-import java.util.TimerTask
+import java.lang.Thread.sleep
+import com.mutualmobile.composesensors.rememberAccelerometerSensorState
 
 
 class MainActivity : ComponentActivity() {
@@ -58,7 +65,6 @@ class MainActivity : ComponentActivity() {
     var sensorManager: SensorManager? = null
     var permisosDados = false
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -69,11 +75,8 @@ class MainActivity : ComponentActivity() {
                     .background(MaterialTheme.colors.background),
                 contentAlignment = Alignment.Center,
             ) {
-                //creo el manejador para los sensores
-                sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 
-                //creo una variable de la clase Sensores que es la responsable de monitorizar
-                sensores = Sensores(sensorManager!!)
+                val lifecycleState by LocalLifecycleOwner.current.lifecycle.observeAsState()
 
 
                 // Obtenemos los permisos
@@ -84,8 +87,27 @@ class MainActivity : ComponentActivity() {
                     }
                 )
 
+                LaunchedEffect(lifecycleState) {
+                    if (lifecycleState == Lifecycle.Event.ON_RESUME) {
+                        permisosDados = tengoPermisos
+                        if (permisosDados != true) {
+                            permissionLauncher.launch(Manifest.permission.BODY_SENSORS)
+                        }
+                    }
+                }
+
+                //creo el manejador para los sensores
+                sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+
+                //creo una variable de la clase Sensores que es la responsable de monitorizar
+                sensores = Sensores(sensorManager!!)
+
+                var acelerometroDatos = rememberAccelerometerSensorState(autoStart= true)
+
                 if (permisosDados == true) {
-                    // Creo un temporizador que se ejecutará cada dos segundos
+
+                    sleep(4000)
+
 
 
                     // Obtengo los datos de los sensores
@@ -94,15 +116,15 @@ class MainActivity : ComponentActivity() {
                         giroscopioDatosActuales = sensores!!.obtenerGiroscopioActual()
                     }
 
-
+                    //WearApp("hola")
                     // Muestro los datos por pantalla
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Force X: ${acelerometroDatosActuales.ejeX}" +
-                                    "\nForce Y: ${acelerometroDatosActuales.ejeY}" +
-                                    "\nForce Z: ${acelerometroDatosActuales.ejeZ}",
+                            text = "Force X:  ${acelerometroDatos.xForce}" +
+                            "\nForce Y:  ${acelerometroDatos.yForce} "+
+                                    "\nForce Z: ${acelerometroDatos.zForce}",
                             textAlign = TextAlign.Center
                         )
 
@@ -195,4 +217,21 @@ fun Greeting(greetingName: String) {
 @Composable
 fun DefaultPreview() {
     WearApp("Preview Android")
+}
+
+private val Activity.tengoPermisos: Boolean
+    get() {
+        return checkSelfPermission(Manifest.permission.BODY_SENSORS) ==
+                PackageManager.PERMISSION_GRANTED
+    }
+
+@Composable
+fun Lifecycle.observeAsState(): State<Lifecycle.Event> {
+    val state = remember { mutableStateOf(Lifecycle.Event.ON_ANY) }
+    DisposableEffect(this) {
+        val observer = LifecycleEventObserver { _, event -> state.value = event }
+        this@observeAsState.addObserver(observer)
+        onDispose { this@observeAsState.removeObserver(observer) }
+    }
+    return state
 }
