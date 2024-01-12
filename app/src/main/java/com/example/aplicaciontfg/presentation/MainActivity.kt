@@ -32,6 +32,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -41,10 +42,12 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.MutableLiveData
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.example.aplicaciontfg.R
 import com.example.aplicaciontfg.presentation.theme.AplicacionTFGTheme
+import com.mutualmobile.composesensors.rememberAccelerometerSensorState
 import java.lang.Thread.sleep
 
 
@@ -66,27 +69,31 @@ class MainActivity : ComponentActivity() {
     var giroscopio: Sensor? = null
     var pulsaciones: Sensor? = null
 
-    var acelerometroTexto: Unit? = null
-    var giroscopioTexto: Unit? = null
-    var pulsacionesTexto: Unit? = null
-
+    var eventNum = 0
+    var estado = mutableStateOf("Inicial")
 
     val listenerSensores : SensorEventListener = object : SensorEventListener{
         override fun onSensorChanged(event: SensorEvent?) {
             //obtengo el tipo de sensor
             val tipoSensor = event?.sensor?.type;
 
-            // Check if the event is from the accelerometer.
             if (tipoSensor == Sensor.TYPE_ACCELEROMETER) {
-                acelerometroDatosAnteriores.ejeX = acelerometroDatosActuales.ejeX
-                acelerometroDatosAnteriores.ejeY = acelerometroDatosActuales.ejeY
-                acelerometroDatosAnteriores.ejeZ = acelerometroDatosActuales.ejeZ
+                eventNum++
 
-                acelerometroDatosActuales.ejeX = event.values[0]
-                acelerometroDatosActuales.ejeY = event.values[1]
-                acelerometroDatosActuales.ejeZ = event.values[2]
+                if (eventNum == 20){
+                    acelerometroDatosAnteriores.ejeX = acelerometroDatosActuales.ejeX
+                    acelerometroDatosAnteriores.ejeY = acelerometroDatosActuales.ejeY
+                    acelerometroDatosAnteriores.ejeZ = acelerometroDatosActuales.ejeZ
 
-                // Actualiza el texto del elemento Text
+                    acelerometroDatosActuales.ejeX = event.values[0]
+                    acelerometroDatosActuales.ejeY = event.values[1]
+                    acelerometroDatosActuales.ejeZ = event.values[2]
+
+                    Log.d("Sensores", acelerometroDatosActuales.ejeX.toString());
+
+                    eventNum = 0
+                    procesarDatos()
+                }
 
             }
             else if (tipoSensor == Sensor.TYPE_GYROSCOPE){
@@ -139,51 +146,34 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-
                 if (permisosDados == true) {
+
+                    sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 
                     //obtengo los sensores que voy a monitorizar
                     acelerometro = sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
                     giroscopio = sensorManager!!.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
                     pulsaciones = sensorManager!!.getDefaultSensor(Sensor.TYPE_HEART_RATE)
 
-                    if (listenerAniadidos == false){
-                        sensorManager!!.registerListener(listenerSensores, acelerometro, SensorManager.SENSOR_DELAY_NORMAL)
-                        sensorManager!!.registerListener(listenerSensores, giroscopio, SensorManager.SENSOR_DELAY_NORMAL)
-                        sensorManager!!.registerListener(listenerSensores, pulsaciones, SensorManager.SENSOR_DELAY_NORMAL)
+                    if (!listenerAniadidos) {
+                        sensorManager!!.registerListener(listenerSensores, acelerometro, 10000000)
+                        sensorManager!!.registerListener(listenerSensores, giroscopio, 10000000)
+                        sensorManager!!.registerListener(listenerSensores, pulsaciones, 10000000)
 
                         listenerAniadidos = true
                     }
 
                     // Muestro los datos por pantalla
-                    /*Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Force X Acelerometro:  ${acelerometroDatosActuales.ejeX}" +
-                            "\nForce Y Gyroscopop:  ${giroscopioDatosActuales.ejeY} "+
-                                    "\nPulsaciones: ${pulsoCardiaco}",
-                            textAlign = TextAlign.Center
-                        )
-                    }*/
-
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        acelerometroTexto = Text(
-                            text = "Force X Acelerometro:  ${acelerometroDatosActuales.ejeX}",
+                        Text(
+                            text = "Estado: " + estado.value,
                             textAlign = TextAlign.Center
-                        )
-
-                        giroscopioTexto = Text(
-                            text = "Force Y Gyroscopop:  ${giroscopioDatosActuales.ejeY}",
-                            textAlign = TextAlign.Center
-                        )
-
-                        pulsacionesTexto = Text(
-                            text = "Pulsaciones: ${pulsoCardiaco}",
-                            textAlign = TextAlign.Center
+                            /*text = "Force X: ${acelerometroDatosActuales.ejeX}" +
+                                    "\nForce hola Y: ${giroscopioDatosActuales.ejeY}" +
+                                    "\nForce Z: ${acelerometroDatosActuales.ejeZ}",
+                            textAlign = TextAlign.Center*/
                         )
                     }
                 }
@@ -197,23 +187,31 @@ class MainActivity : ComponentActivity() {
         // Register the listener for each sensor
         if (sensorManager != null) {
             if (!listenerAniadidos) {
-                sensorManager!!.registerListener(listenerSensores, acelerometro, SensorManager.SENSOR_DELAY_NORMAL)
-                sensorManager!!.registerListener(listenerSensores, giroscopio, SensorManager.SENSOR_DELAY_NORMAL)
-                sensorManager!!.registerListener(listenerSensores, pulsaciones, SensorManager.SENSOR_DELAY_NORMAL)
+                sensorManager!!.registerListener(listenerSensores, acelerometro, 10000000)
+                sensorManager!!.registerListener(listenerSensores, giroscopio, 10000000)
+                sensorManager!!.registerListener(listenerSensores, pulsaciones, 10000000)
 
                 listenerAniadidos = true
             }
         }
     }
 
-    override fun onPause() {
+    /*override fun onPause() {
         super.onPause()
         sensorManager!!.unregisterListener(listenerSensores, acelerometro)
         sensorManager!!.unregisterListener(listenerSensores, giroscopio)
         sensorManager!!.unregisterListener(listenerSensores, pulsaciones)
         listenerAniadidos = false
+    }*/
+
+    fun procesarDatos() {
+        if (estado.value == "bien")
+            estado.value = "mal"
+        else
+            estado.value = "bien"
     }
 }
+
 
 
 @Composable
