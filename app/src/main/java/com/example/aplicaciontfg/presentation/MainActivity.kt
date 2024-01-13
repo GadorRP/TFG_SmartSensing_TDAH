@@ -48,7 +48,9 @@ import androidx.wear.compose.material.Text
 import com.example.aplicaciontfg.R
 import com.example.aplicaciontfg.presentation.theme.AplicacionTFGTheme
 import com.mutualmobile.composesensors.rememberAccelerometerSensorState
+import java.lang.Math.abs
 import java.lang.Thread.sleep
+import kotlin.math.sqrt
 
 
 class MainActivity : ComponentActivity() {
@@ -69,8 +71,11 @@ class MainActivity : ComponentActivity() {
     var giroscopio: Sensor? = null
     var pulsaciones: Sensor? = null
 
-    var eventNum = 0
+    var eventNumAcelerometro = 0
+    var eventNumGiroscopio = 0
     var estado = mutableStateOf("Inicial")
+    val valoresSensoresObtenidos = Array(3) { false } //Acelerometro, giroscopio, latido
+
 
     val listenerSensores : SensorEventListener = object : SensorEventListener{
         override fun onSensorChanged(event: SensorEvent?) {
@@ -78,9 +83,9 @@ class MainActivity : ComponentActivity() {
             val tipoSensor = event?.sensor?.type;
 
             if (tipoSensor == Sensor.TYPE_ACCELEROMETER) {
-                eventNum++
+                eventNumAcelerometro++
 
-                if (eventNum == 20){
+                if (eventNumAcelerometro == 20){
                     acelerometroDatosAnteriores.ejeX = acelerometroDatosActuales.ejeX
                     acelerometroDatosAnteriores.ejeY = acelerometroDatosActuales.ejeY
                     acelerometroDatosAnteriores.ejeZ = acelerometroDatosActuales.ejeZ
@@ -89,25 +94,38 @@ class MainActivity : ComponentActivity() {
                     acelerometroDatosActuales.ejeY = event.values[1]
                     acelerometroDatosActuales.ejeZ = event.values[2]
 
-                    Log.d("Sensores", acelerometroDatosActuales.ejeX.toString());
+                    eventNumAcelerometro = 0
 
-                    eventNum = 0
-                    procesarDatos()
+                    valoresSensoresObtenidos[0] = true
                 }
-
             }
             else if (tipoSensor == Sensor.TYPE_GYROSCOPE){
-                giroscopioDatosAnteriores.ejeX = giroscopioDatosActuales.ejeX
-                giroscopioDatosAnteriores.ejeY = giroscopioDatosActuales.ejeY
-                giroscopioDatosAnteriores.ejeZ = giroscopioDatosActuales.ejeZ
+                eventNumGiroscopio++
 
-                giroscopioDatosActuales.ejeX = event.values[0]
-                giroscopioDatosActuales.ejeY = event.values[1]
-                giroscopioDatosActuales.ejeZ = event.values[2]
+                if (eventNumGiroscopio == 20) {
+                    giroscopioDatosAnteriores.ejeX = giroscopioDatosActuales.ejeX
+                    giroscopioDatosAnteriores.ejeY = giroscopioDatosActuales.ejeY
+                    giroscopioDatosAnteriores.ejeZ = giroscopioDatosActuales.ejeZ
+
+                    giroscopioDatosActuales.ejeX = event.values[0]
+                    giroscopioDatosActuales.ejeY = event.values[1]
+                    giroscopioDatosActuales.ejeZ = event.values[2]
+
+                    eventNumGiroscopio = 0
+
+                    valoresSensoresObtenidos[1] = true
+                }
             }
             else if (tipoSensor == Sensor.TYPE_HEART_RATE){
                 pulsoCardiaco = event.values[0]
+                valoresSensoresObtenidos[2] = true
             }
+
+            if (valoresSensoresObtenidos[0] && valoresSensoresObtenidos[1] && valoresSensoresObtenidos[2]){
+                procesarDatos()
+                valoresSensoresObtenidos.fill(false)
+            }
+
         }
 
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
@@ -156,9 +174,9 @@ class MainActivity : ComponentActivity() {
                     pulsaciones = sensorManager!!.getDefaultSensor(Sensor.TYPE_HEART_RATE)
 
                     if (!listenerAniadidos) {
-                        sensorManager!!.registerListener(listenerSensores, acelerometro, 10000000)
-                        sensorManager!!.registerListener(listenerSensores, giroscopio, 10000000)
-                        sensorManager!!.registerListener(listenerSensores, pulsaciones, 10000000)
+                        sensorManager!!.registerListener(listenerSensores, acelerometro, 1000000)
+                        sensorManager!!.registerListener(listenerSensores, giroscopio, 1000000)
+                        sensorManager!!.registerListener(listenerSensores, pulsaciones, 1000000)
 
                         listenerAniadidos = true
                     }
@@ -187,9 +205,9 @@ class MainActivity : ComponentActivity() {
         // Register the listener for each sensor
         if (sensorManager != null) {
             if (!listenerAniadidos) {
-                sensorManager!!.registerListener(listenerSensores, acelerometro, 10000000)
-                sensorManager!!.registerListener(listenerSensores, giroscopio, 10000000)
-                sensorManager!!.registerListener(listenerSensores, pulsaciones, 10000000)
+                sensorManager!!.registerListener(listenerSensores, acelerometro, 1000000)
+                sensorManager!!.registerListener(listenerSensores, giroscopio, 1000000)
+                sensorManager!!.registerListener(listenerSensores, pulsaciones, 1000000)
 
                 listenerAniadidos = true
             }
@@ -205,10 +223,35 @@ class MainActivity : ComponentActivity() {
     }*/
 
     fun procesarDatos() {
-        if (estado.value == "bien")
-            estado.value = "mal"
-        else
-            estado.value = "bien"
+        var enMovimiento = false
+        val magnitudAnterior = sqrt(acelerometroDatosAnteriores.ejeX * acelerometroDatosAnteriores.ejeX +
+                                       acelerometroDatosAnteriores.ejeY * acelerometroDatosAnteriores.ejeY +
+                                       acelerometroDatosAnteriores.ejeZ * acelerometroDatosAnteriores.ejeZ)
+
+        val magnitudActual = sqrt(acelerometroDatosActuales.ejeX * acelerometroDatosActuales.ejeX +
+                acelerometroDatosActuales.ejeY * acelerometroDatosActuales.ejeY +
+                acelerometroDatosActuales.ejeZ * acelerometroDatosActuales.ejeZ)
+
+        if ((magnitudActual - magnitudAnterior) > 0.5){
+            enMovimiento = true
+        }
+        Log.d("Datos1", (abs(magnitudActual - magnitudAnterior).toString()));
+        //Log.d("Datos2", magnitudActual.toString());
+
+        if (pulsoCardiaco > 0){
+            if (pulsoCardiaco > 80){
+                estado.value = Estado.ENMOVIMIENTO.toString()
+            }
+            else if (enMovimiento){
+                estado.value = Estado.NERVIOSO.toString()
+            }
+            else
+                estado.value = Estado.TRANQUILO.toString()
+        }
+        else {
+            estado.value = Estado.DESCONOCIDO.toString()
+        }
+
     }
 }
 

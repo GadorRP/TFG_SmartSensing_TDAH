@@ -12,3 +12,10 @@ class GiroscopioDatos () {
     var ejeZ: Float = 0f
 }
 
+enum class Estado {
+    TRANQUILO,
+    NERVIOSO,
+    ENMOVIMIENTO,
+    DESCONOCIDO
+}
+
