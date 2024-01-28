@@ -15,16 +15,20 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -35,11 +39,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.colorspace.ColorSpaces
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.MutableLiveData
@@ -73,8 +83,12 @@ class MainActivity : ComponentActivity() {
 
     var eventNumAcelerometro = 0
     var eventNumGiroscopio = 0
-    var estado = mutableStateOf("Inicial")
+
     val valoresSensoresObtenidos = Array(3) { false } //Acelerometro, giroscopio, latido
+    var numNervioso = 0
+
+    var estado = mutableStateOf("Inicial")
+    val imagen = mutableStateOf(R.drawable.desconocido)
 
 
     val listenerSensores : SensorEventListener = object : SensorEventListener{
@@ -137,12 +151,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        window.attributes.flags = window.attributes.flags or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+
         setContent() {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colors.background),
-                contentAlignment = Alignment.Center,
+                    .background(Color(0xFF0080FF)),
+                contentAlignment = Alignment.TopCenter,
             ) {
 
                 val lifecycleState by LocalLifecycleOwner.current.lifecycle.observeAsState()
@@ -183,11 +199,19 @@ class MainActivity : ComponentActivity() {
 
                     // Muestro los datos por pantalla
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
+                        Image(
+                            painter = painterResource(imagen.value),
+                            contentDescription = "inicial",
+                            modifier = Modifier
+                                .size(130.dp,130.dp)
+                                .padding(top = 15.dp, bottom = 5.dp)
+                        )
                         Text(
                             text = "Estado: " + estado.value,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            color = Color.Black,
                             /*text = "Force X: ${acelerometroDatosActuales.ejeX}" +
                                     "\nForce hola Y: ${giroscopioDatosActuales.ejeY}" +
                                     "\nForce Z: ${acelerometroDatosActuales.ejeZ}",
@@ -232,28 +256,39 @@ class MainActivity : ComponentActivity() {
                 acelerometroDatosActuales.ejeY * acelerometroDatosActuales.ejeY +
                 acelerometroDatosActuales.ejeZ * acelerometroDatosActuales.ejeZ)
 
-        if ((magnitudActual - magnitudAnterior) > 0.5){
+        if (abs(magnitudActual - magnitudAnterior) > 0.5){
             enMovimiento = true
+            numNervioso += 1
+            Log.d("valorNervioso" , numNervioso.toString())
+        }
+        else{
+            if (numNervioso > 0)
+                numNervioso -= 1
         }
         Log.d("Datos1", (abs(magnitudActual - magnitudAnterior).toString()));
-        //Log.d("Datos2", magnitudActual.toString());
 
         if (pulsoCardiaco > 0){
-            if (pulsoCardiaco > 80){
+            if (pulsoCardiaco > 90){
                 estado.value = Estado.ENMOVIMIENTO.toString()
+                imagen.value = R.drawable.levantado
             }
-            else if (enMovimiento){
+            else if (numNervioso > 1){
                 estado.value = Estado.NERVIOSO.toString()
+                imagen.value = R.drawable.nervioso
             }
-            else
+            else{
                 estado.value = Estado.TRANQUILO.toString()
+                imagen.value = R.drawable.relajado
+            }
         }
         else {
             estado.value = Estado.DESCONOCIDO.toString()
+            imagen.value = R.drawable.desconocido
         }
 
     }
 }
+
 
 
 
