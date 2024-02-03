@@ -54,16 +54,9 @@ import com.example.aplicaciontfg.R
 import com.example.aplicaciontfg.presentation.theme.AplicacionTFGTheme
 import java.lang.Math.abs
 import kotlin.math.sqrt
-import androidx.navigation.NavController
-import androidx.navigation.NavDirections
-import androidx.navigation.NavHost
-import androidx.navigation.NavOptions
-import androidx.navigation.findNavController
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.fragment.NavHostFragment
 
 
-class MainActivity : ComponentActivity() {
+/**class MainActivityOld : ComponentActivity() {
 
     var acelerometroDatosAnteriores: AcelerometroDatos = AcelerometroDatos()
     var acelerometroDatosActuales: AcelerometroDatos = AcelerometroDatos()
@@ -89,8 +82,6 @@ class MainActivity : ComponentActivity() {
 
     var estado = mutableStateOf("Inicial")
     val imagen = mutableStateOf(R.drawable.desconocido)
-
-    private lateinit var navController: NavController
 
 
     val listenerSensores : SensorEventListener = object : SensorEventListener{
@@ -155,12 +146,6 @@ class MainActivity : ComponentActivity() {
 
         window.attributes.flags = window.attributes.flags or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 
-        //hay que crear el archivo xml
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment
-
-        navController= navHostFragment.navController
-
-
         setContent() {
             Box(
                 modifier = Modifier
@@ -190,7 +175,6 @@ class MainActivity : ComponentActivity() {
 
                 if (permisosDados == true) {
 
-
                     sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 
                     //obtengo los sensores que voy a monitorizar
@@ -205,14 +189,32 @@ class MainActivity : ComponentActivity() {
 
                         listenerAniadidos = true
                     }
+
+                    // Muestro los datos por pantalla
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Image(
+                            painter = painterResource(imagen.value),
+                            contentDescription = "inicial",
+                            modifier = Modifier
+                                .size(130.dp,130.dp)
+                                .padding(top = 15.dp, bottom = 5.dp)
+                        )
+                        Text(
+                            text = "Estado: " + estado.value,
+                            textAlign = TextAlign.Center,
+                            color = Color.Black,
+                            /*text = "Force X: ${acelerometroDatosActuales.ejeX}" +
+                                    "\nForce hola Y: ${giroscopioDatosActuales.ejeY}" +
+                                    "\nForce Z: ${acelerometroDatosActuales.ejeZ}",
+                            textAlign = TextAlign.Center*/
+                        )
+                    }
                 }
-
-
             }
         }
     }
-
-
 
     override fun onResume() {
         super.onResume()
@@ -332,4 +334,4 @@ fun Lifecycle.observeAsState(): State<Lifecycle.Event> {
         onDispose { this@observeAsState.removeObserver(observer) }
     }
     return state
-}
+}**/

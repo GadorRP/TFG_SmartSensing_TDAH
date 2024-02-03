@@ -49,6 +49,11 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.activity:activity-ktx:1.5.0")
+    implementation("androidx.navigation:navigation-fragment:2.5.0")
+    implementation("androidx.navigation:navigation-ui:2.5.0")
+    implementation("androidx.compose.navigation:navigation-compose:1.2.0-alpha07")
     implementation("com.mutualmobile:composesensors:1.1.2")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("com.google.android.gms:play-services-wearable:18.1.0")
