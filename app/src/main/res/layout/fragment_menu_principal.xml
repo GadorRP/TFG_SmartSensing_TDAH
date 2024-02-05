@@ -1,37 +1,30 @@
-<BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue">
-
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Título de la aplicación"
-        android:layout_gravity="center_horizontal"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+    android:background="@color/blue"
+    tools:context=".presentation.fragments.MenuPrincipal">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom">
+        android:layout_height="match_parent"
+        android:padding="5dp">
 
         <Button
             android:id="@+id/buttonTest"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Test"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:text="Test" />
 
         <Button
             android:id="@+id/buttonCalibrar"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Calibrar"
-            android:layout_gravity="right" />
-
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="100dp"
+            android:text="Calibrar" />
     </FrameLayout>
 
-</BoxInsetLayout>
+</androidx.wear.widget.BoxInsetLayout>

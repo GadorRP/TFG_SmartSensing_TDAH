@@ -21,6 +21,7 @@ class MenuPrincipal : Fragment() {
         val root = inflater.inflate(R.layout.fragment_menu_principal, container, false)
 
         //Boton para test
+
         val botonTest = root.findViewById<Button>(R.id.buttonTest)
 
         botonTest.setOnClickListener {
