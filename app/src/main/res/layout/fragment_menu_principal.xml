@@ -1,0 +1,37 @@
+<BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blue">
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Título de la aplicación"
+        android:layout_gravity="center_horizontal"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <Button
+            android:id="@+id/buttonTest"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Test"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:id="@+id/buttonCalibrar"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Calibrar"
+            android:layout_gravity="right" />
+
+    </FrameLayout>
+
+</BoxInsetLayout>

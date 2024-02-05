@@ -20,6 +20,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -63,7 +64,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.fragment.NavHostFragment
 
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     var acelerometroDatosAnteriores: AcelerometroDatos = AcelerometroDatos()
     var acelerometroDatosActuales: AcelerometroDatos = AcelerometroDatos()
@@ -156,9 +157,9 @@ class MainActivity : ComponentActivity() {
         window.attributes.flags = window.attributes.flags or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 
         //hay que crear el archivo xml
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment
+        //val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment
 
-        navController= navHostFragment.navController
+        //navController= navHostFragment.navController
 
 
         setContent() {

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/menuPrincipal">
+
+    <fragment
+        android:id="@+id/modoCalibracion"
+        android:name="com.example.aplicaciontfg.presentation.fragments.ModoCalibracion"
+        android:label="fragment_modo_calibracion"
+        tools:layout="@layout/fragment_modo_calibracion" />
+    <fragment
+        android:id="@+id/menuPrincipal"
+        android:name="com.example.aplicaciontfg.presentation.fragments.MenuPrincipal"
+        android:label="fragment_menu_principal"
+        tools:layout="@layout/fragment_menu_principal" >
+        <action
+            android:id="@+id/action_menuPrincipal_to_modoTest"
+            app:destination="@id/modoTest" />
+        <action
+            android:id="@+id/action_menuPrincipal_to_modoCalibracion"
+            app:destination="@id/modoCalibracion" />
+    </fragment>
+    <fragment
+        android:id="@+id/modoTest"
+        android:name="com.example.aplicaciontfg.presentation.fragments.ModoTest"
+        android:label="fragment_modo_test"
+        tools:layout="@layout/fragment_modo_test" />
+</navigation>

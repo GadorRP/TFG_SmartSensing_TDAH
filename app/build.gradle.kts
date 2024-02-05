@@ -49,11 +49,10 @@ android {
 }
 
 dependencies {
-    implementation ("androidx.navigation:navigation-compose:2.5.3")
+    implementation ("androidx.navigation:navigation-compose:2.5.0")
     implementation("androidx.activity:activity-ktx:1.5.0")
     implementation("androidx.navigation:navigation-fragment:2.5.0")
     implementation("androidx.navigation:navigation-ui:2.5.0")
-    implementation("androidx.compose.navigation:navigation-compose:1.2.0-alpha07")
     implementation("com.mutualmobile:composesensors:1.1.2")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("com.google.android.gms:play-services-wearable:18.1.0")
@@ -67,8 +66,16 @@ dependencies {
     implementation("androidx.wear.compose:compose-foundation:1.0.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.activity:activity-compose:1.5.1")
+    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.10.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.wear:wear:1.3.0")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
