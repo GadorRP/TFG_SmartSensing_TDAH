@@ -12,6 +12,8 @@ import com.example.aplicaciontfg.R
 
 
 class MenuPrincipal : Fragment() {
+    val pulsoMinimo = -1
+    val pulsoMaximo = -1
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(

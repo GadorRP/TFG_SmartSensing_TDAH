@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
 
     android:background="#7EC3A5"
-    tools:context=".presentation.fragments.ModoCalibracion">
+    tools:context=".presentation.fragments.ResultadosCalibracion">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -13,41 +13,36 @@
         android:padding="5dp">
 
         <TextView
-            android:id="@+id/textView1Cal"
+            android:id="@+id/textViewTitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="45dp"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/black"
-            android:text="Intenta relajarte" />
+            android:text="Resultados Obtenidos" />
 
         <TextView
-            android:id="@+id/textView2Cal"
+            android:id="@+id/textViewPulsaciones"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="80dp"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textAlignment="center"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/black"
-            android:text="Realiza 5 respiraciones profundas y pulsa el botón" />
+            android:text="Pulso mínimo:
+                          Pulso máximo: " />
 
         <Button
-            android:id="@+id/buttonPulso"
+            android:id="@+id/buttonVolver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="60dp"
-            android:text="Tomar pulso" />
+            android:text="Volver" />
 
-        <TextView
-            android:id="@+id/textViewPulso"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="25dp"
-            android:text="Tu pulso es: "  />
+
     </FrameLayout>
 
 </androidx.wear.widget.BoxInsetLayout>

@@ -9,7 +9,11 @@
         android:id="@+id/modoCalibracion"
         android:name="com.example.aplicaciontfg.presentation.fragments.ModoCalibracion"
         android:label="fragment_modo_calibracion"
-        tools:layout="@layout/fragment_modo_calibracion" />
+        tools:layout="@layout/fragment_modo_calibracion" >
+        <action
+            android:id="@+id/action_modoCalibracion_to_resultadosCalibracion"
+            app:destination="@id/resultadosCalibracion" />
+    </fragment>
     <fragment
         android:id="@+id/menuPrincipal"
         android:name="com.example.aplicaciontfg.presentation.fragments.MenuPrincipal"
@@ -29,4 +33,21 @@
         android:name="com.example.aplicaciontfg.presentation.fragments.ModoTest"
         android:label="fragment_modo_test"
         tools:layout="@layout/fragment_modo_test" />
+    <fragment
+        android:id="@+id/resultadosCalibracion"
+        android:name="com.example.aplicaciontfg.presentation.fragments.ResultadosCalibracion"
+        android:label="fragment_resultados_calibracion"
+        tools:layout="@layout/fragment_resultados_calibracion" >
+        <action
+            android:id="@+id/action_resultadosCalibracion_to_menuPrincipal"
+            app:destination="@id/menuPrincipal" />
+        <argument
+            android:name="pulsoMinimo"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="pulsoMaximo"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
 </navigation>

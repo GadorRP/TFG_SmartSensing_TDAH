@@ -6,9 +6,13 @@ import android.content.pm.PackageManager
 import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -16,7 +20,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -26,52 +34,48 @@ class MainActivity2 : AppCompatActivity(), IComunicacionActividadFragmentos {
     var permisosDados = false
     val calibrado = false
     var sensorManager: SensorManager? = null
+    val permiso = Manifest.permission.BODY_SENSORS
+
+    val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                permisosDados = true
+                Log.d("MyActivity", "Permiso BODY_SENSORS concedido")
+            } else {
+                Log.d("MyActivity", "Permiso BODY_SENSORS denegado")
+
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Comprobar si tengo ya los permisos
+        if (noTengoPermisos()) {
+            requestPermissionLauncher.launch(Manifest.permission.BODY_SENSORS)
+        }else {
+            permisosDados = true
+        }
 
-        setContent {
-
-            val lifecycleState by LocalLifecycleOwner.current.lifecycle.observeAsState()
-
-            // Obtenemos los permisos
-            val permissionLauncher = rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.RequestPermission(),
-                onResult = { isGranted ->
-                    permisosDados = isGranted
-                }
-            )
-
-            //Obtenemos el estado de la actividad y comprobamos si tenemos los permisos
-            LaunchedEffect(lifecycleState) {
-                if (lifecycleState == Lifecycle.Event.ON_RESUME) {
-                    permisosDados = tengoPermisos()
-                    if (permisosDados != true) {
-                        permissionLauncher.launch(Manifest.permission.BODY_SENSORS)
-                    }
-                }
-            }
-
-            //Cargamos la vista de la actividad
-            if (permisosDados){
-                sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-
-                setContentView(R.layout.activity_main)
-            }
-
+        if (permisosDados){
+            sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+            setContentView(R.layout.activity_main)
         }
 
     }
 
-    private fun tengoPermisos(): Boolean {
-        return checkSelfPermission(Manifest.permission.BODY_SENSORS) ==
+    private fun noTengoPermisos(): Boolean {
+        return checkSelfPermission(Manifest.permission.BODY_SENSORS) !=
                 PackageManager.PERMISSION_GRANTED
     }
 
-    override fun getSensorManager(): SensorManager? {
+
+    override fun getSenManager(): SensorManager? {
         return sensorManager
     }
+
 }
 
 @Composable
