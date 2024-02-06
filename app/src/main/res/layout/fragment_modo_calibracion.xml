@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green"
+
+    android:background="#7EC3A5"
     tools:context=".presentation.fragments.ModoCalibracion">
 
     <FrameLayout
@@ -11,11 +12,34 @@
         android:layout_height="match_parent"
         android:padding="5dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        <TextView
+            android:id="@+id/textView1Cal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="45dp"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:text="Intenta relajarte" />
 
+        <TextView
+            android:id="@+id/textView2Cal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:textSize="15sp"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/black"
+            android:text="Realiza 5 respiraciones profundas y pulsa el botón" />
+
+        <Button
+            android:id="@+id/buttonPulso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="60dp"
+            android:text="Tomar pulso" />
     </FrameLayout>
 
 </androidx.wear.widget.BoxInsetLayout>

@@ -16,52 +16,36 @@ import android.hardware.SensorManager
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
+import androidx.navigation.NavController
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.example.aplicaciontfg.R
 import com.example.aplicaciontfg.presentation.theme.AplicacionTFGTheme
 import java.lang.Math.abs
 import kotlin.math.sqrt
-import androidx.navigation.NavController
-import androidx.navigation.NavDirections
-import androidx.navigation.NavHost
-import androidx.navigation.NavOptions
-import androidx.navigation.findNavController
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.fragment.NavHostFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -324,7 +308,7 @@ private val Activity.tengoPermisos: Boolean
                 PackageManager.PERMISSION_GRANTED
     }
 
-@Composable
+/**@Composable
 fun Lifecycle.observeAsState(): State<Lifecycle.Event> {
     val state = remember { mutableStateOf(Lifecycle.Event.ON_ANY) }
     DisposableEffect(this) {
@@ -333,4 +317,4 @@ fun Lifecycle.observeAsState(): State<Lifecycle.Event> {
         onDispose { this@observeAsState.removeObserver(observer) }
     }
     return state
-}
+}**/

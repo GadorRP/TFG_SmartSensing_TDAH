@@ -9,12 +9,7 @@
         android:id="@+id/modoCalibracion"
         android:name="com.example.aplicaciontfg.presentation.fragments.ModoCalibracion"
         android:label="fragment_modo_calibracion"
-        tools:layout="@layout/fragment_modo_calibracion" >
-        <action
-            android:id="@+id/action_modoCalibracion_to_menuPrincipal"
-            app:destination="@id/menuPrincipal"
-            app:launchSingleTop="false" />
-    </fragment>
+        tools:layout="@layout/fragment_modo_calibracion" />
     <fragment
         android:id="@+id/menuPrincipal"
         android:name="com.example.aplicaciontfg.presentation.fragments.MenuPrincipal"
@@ -22,18 +17,16 @@
         tools:layout="@layout/fragment_menu_principal" >
         <action
             android:id="@+id/action_menuPrincipal_to_modoTest"
-            app:destination="@id/modoTest" />
+            app:destination="@id/modoTest"
+            app:popUpTo="@id/menuPrincipal" />
         <action
             android:id="@+id/action_menuPrincipal_to_modoCalibracion"
-            app:destination="@id/modoCalibracion" />
+            app:destination="@id/modoCalibracion"
+            app:popUpTo="@id/menuPrincipal" />
     </fragment>
     <fragment
         android:id="@+id/modoTest"
         android:name="com.example.aplicaciontfg.presentation.fragments.ModoTest"
         android:label="fragment_modo_test"
-        tools:layout="@layout/fragment_modo_test" >
-        <action
-            android:id="@+id/action_modoTest_to_menuPrincipal"
-            app:destination="@id/menuPrincipal" />
-    </fragment>
+        tools:layout="@layout/fragment_modo_test" />
 </navigation>
