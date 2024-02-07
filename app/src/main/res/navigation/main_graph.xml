@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_modoCalibracion_to_resultadosCalibracion"
             app:destination="@id/resultadosCalibracion" />
+        <action
+            android:id="@+id/action_modoCalibracion_to_menuPrincipal"
+            app:destination="@id/menuPrincipal" />
     </fragment>
     <fragment
         android:id="@+id/menuPrincipal"
@@ -26,7 +29,7 @@
         <action
             android:id="@+id/action_menuPrincipal_to_modoCalibracion"
             app:destination="@id/modoCalibracion"
-            app:popUpTo="@id/menuPrincipal" />
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/modoTest"

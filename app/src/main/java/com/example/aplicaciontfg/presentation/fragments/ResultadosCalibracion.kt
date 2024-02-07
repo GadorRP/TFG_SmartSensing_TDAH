@@ -1,5 +1,6 @@
 package com.example.aplicaciontfg.presentation.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,16 +15,17 @@ import com.example.aplicaciontfg.R
 class ResultadosCalibracion : Fragment() {
     var pulsoMinimo = -1
     var pulsoMaximo = -1
-    //val args : ResultadosCalibracionArgs by navArgs()
+    val args : ResultadosCalibracionArgs by navArgs()
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //pulsoMinimo = args.pulsoMinimo
-        //pulsoMaximo = args.pulsoMaximo
+        pulsoMinimo = args.pulsoMinimo
+        pulsoMaximo = args.pulsoMaximo
 
         val textoPulsaciones = view.findViewById<TextView>(R.id.textViewPulsaciones)
-        textoPulsaciones.text = pulsoMinimo.toString()
+        textoPulsaciones.text = "Tu pulso mínimo es $pulsoMinimo \n Tu pulso máximo es $pulsoMaximo"
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

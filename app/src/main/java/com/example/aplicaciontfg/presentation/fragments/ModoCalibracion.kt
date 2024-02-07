@@ -31,26 +31,24 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
     private var pulsoMaximo = MutableLiveData<Int>(-1)
     private lateinit var actividad: IComunicacionActividadFragmentos
     private lateinit var sensorManager : SensorManager
-    private var escuchando = false
+    private var obtenerValor = false
     private var pulsaciones : Sensor? = null
     private lateinit var textPulso : TextView
 
     private val listenerPulso = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent?) {
 
-            if (event != null && escuchando && event.values[0] > 0) {
-                escuchando = false
+            if (event != null && obtenerValor && event.values[0] > 0) {
+                obtenerValor = false
 
                 if (pulsoMinimo.value == -1) {
                     pulsoMinimo.value = event.values[0].toInt()
+
                 }
                 else if(pulsoMaximo.value == -1){
                     pulsoMaximo.value = event.values[0].toInt()
                     calibrado.value = true
                 }
-
-                stopListening()
-                textPulso.text = String.format("Tu pulso es: %d", pulsoMinimo.value)
             }
         }
 
@@ -63,6 +61,10 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //Registrar listener del sensor
+        pulsaciones = sensorManager!!.getDefaultSensor(Sensor.TYPE_HEART_RATE)
+        sensorManager.registerListener(listenerPulso, pulsaciones, SensorManager.SENSOR_DELAY_NORMAL)
+
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_modo_calibracion, container, false)
 
@@ -73,19 +75,20 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
         textPulso = root.findViewById<TextView>(R.id.textViewPulso)
 
         pulsoMinimo.observe(viewLifecycleOwner) { nuevoValor ->
-            Log.d("Calibrar", "holaaaa")
+
             if (nuevoValor != -1) {
                 textTitulo.text = "Vamos a movernos"
-                textsubtitulo.text = "Realiza 5 saltos y pulsa el botón"
+                textsubtitulo.text = "Realiza 5 saltos y pulse Tomar Pulso"
             }
         }
 
         calibrado.observe(viewLifecycleOwner) { nuevoValor ->
             if (nuevoValor == true) {
-                //findNavController().navigate(ModoCalibracionDirections.actionModoCalibracionToResultadosCalibracion(
-                //    pulsoMinimo = pulsoMinimo.value!!, pulsoMaximo = pulsoMaximo.value!!)
-                //)
-                findNavController().navigate(R.id.action_modoCalibracion_to_resultadosCalibracion)
+                stopListening()
+                findNavController().navigate(ModoCalibracionDirections.actionModoCalibracionToResultadosCalibracion(
+                    pulsoMinimo = pulsoMinimo.value!!, pulsoMaximo = pulsoMaximo.value!!)
+                )
+
             }
         }
 
@@ -94,6 +97,13 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
         botonPulso.setOnClickListener {
             tomarPulso()
         }
+
+        val botonVolver = root.findViewById<Button>(R.id.buttonCalVolver)
+
+        botonVolver.setOnClickListener {
+            findNavController().navigate(R.id.action_modoCalibracion_to_menuPrincipal)
+        }
+
         return root
     }
 
@@ -109,13 +119,7 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
     }
 
     fun tomarPulso() {
-
-        //obtengo el sensor de la frecuencia cardiaca
-        pulsaciones = sensorManager!!.getDefaultSensor(Sensor.TYPE_HEART_RATE)
-
-        escuchando = true
-        sensorManager.registerListener(listenerPulso, pulsaciones, SensorManager.SENSOR_DELAY_NORMAL)
-
+        obtenerValor = true
     }
 
     private fun stopListening() {

@@ -17,29 +17,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="45dp"
-            android:textSize="20sp"
+            android:layout_marginTop="30dp"
+            android:text="Intenta relajarte"
             android:textColor="@color/black"
-            android:text="Intenta relajarte" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/textView2Cal"
-            android:layout_width="wrap_content"
+            android:layout_width="195dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:textSize="15sp"
-            android:textAlignment="center"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="60dp"
+            android:text="Realiza 5 respiraciones profundas y pulse Tomar Pulso"
+            android:textAlignment="center"
             android:textColor="@color/black"
-            android:text="Realiza 5 respiraciones profundas y pulsa el botón" />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/buttonPulso"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="30dp"
             android:text="Tomar pulso" />
+
+        <Button
+            android:id="@+id/buttonCalVolver"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="70dp"
+            android:text="Volver" />
 
         <TextView
             android:id="@+id/textViewPulso"
@@ -47,7 +55,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="25dp"
-            android:text="Tu pulso es: "  />
+            android:text="Tu pulso es: "
+            android:visibility="invisible"/>
     </FrameLayout>
 
 </androidx.wear.widget.BoxInsetLayout>
