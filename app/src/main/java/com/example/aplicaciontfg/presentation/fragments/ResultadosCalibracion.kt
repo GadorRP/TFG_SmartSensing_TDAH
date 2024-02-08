@@ -17,16 +17,16 @@ class ResultadosCalibracion : Fragment() {
     var pulsoMaximo = -1
     val args : ResultadosCalibracionArgs by navArgs()
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         pulsoMinimo = args.pulsoMinimo
         pulsoMaximo = args.pulsoMaximo
 
-        val textoPulsaciones = view.findViewById<TextView>(R.id.textViewPulsaciones)
+        val textoPulsaciones = view.findViewById<TextView>(R.id.tvResultadosCal)
         textoPulsaciones.text = "Tu pulso mínimo es $pulsoMinimo \n Tu pulso máximo es $pulsoMaximo"
     }
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,10 +35,12 @@ class ResultadosCalibracion : Fragment() {
         val root = inflater.inflate(R.layout.fragment_resultados_calibracion, container, false)
 
         //Boton para volver
-        val botonVolver = root.findViewById<Button>(R.id.buttonVolver)
+        val botonVolver = root.findViewById<Button>(R.id.buttonVolverCal)
 
         botonVolver.setOnClickListener {
-            findNavController().navigate(R.id.action_resultadosCalibracion_to_menuPrincipal)
+            findNavController().navigate(ResultadosCalibracionDirections.actionResultadosCalibracionToMenuPrincipal(
+                pulsoMinimo = pulsoMinimo, pulsoMaximo = pulsoMaximo)
+            )
         }
 
         return root

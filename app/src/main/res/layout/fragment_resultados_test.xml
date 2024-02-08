@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    android:background="#7EC3A5"
-    tools:context=".presentation.fragments.ResultadosCalibracion">
+    android:background="@color/material_dynamic_primary80"
+    tools:context=".presentation.fragments.ResultadosTest"
+    >
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -13,17 +13,17 @@
         android:padding="5dp">
 
         <TextView
-            android:id="@+id/tVTituloCal"
+            android:id="@+id/tvTituloTest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="45dp"
             android:textSize="18sp"
             android:textColor="@color/black"
-            android:text="Resultados Obtenidos" />
+            android:text="Resultados tras el Test" />
 
         <TextView
-            android:id="@+id/tvResultadosCal"
+            android:id="@+id/tvResultadosTest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="80dp"
@@ -31,11 +31,11 @@
             android:textAlignment="center"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/black"
-            android:text="Pulso mínimo:
-                          Pulso máximo: " />
+            android:text="Estado Inicial:
+                          Estado Final: " />
 
         <Button
-            android:id="@+id/buttonVolverCal"
+            android:id="@+id/buttonVolverTest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

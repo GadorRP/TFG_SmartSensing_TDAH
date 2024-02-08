@@ -24,18 +24,36 @@
         tools:layout="@layout/fragment_menu_principal" >
         <action
             android:id="@+id/action_menuPrincipal_to_modoTest"
-            app:destination="@id/modoTest"
-            app:popUpTo="@id/menuPrincipal" />
+            app:destination="@id/modoTest" />
         <action
             android:id="@+id/action_menuPrincipal_to_modoCalibracion"
             app:destination="@id/modoCalibracion"
             app:popUpToInclusive="false" />
+        <argument
+            android:name="pulsoMinimo"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="pulsoMaximo"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
     <fragment
         android:id="@+id/modoTest"
         android:name="com.example.aplicaciontfg.presentation.fragments.ModoTest"
         android:label="fragment_modo_test"
-        tools:layout="@layout/fragment_modo_test" />
+        tools:layout="@layout/fragment_modo_test" >
+        <argument android:name="pulsoMinimo"
+            app:argType="integer" />
+        <argument android:name="pulsoMaximo"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_modoTest_to_menuPrincipal"
+            app:destination="@id/menuPrincipal" />
+        <action
+            android:id="@+id/action_modoTest_to_resultadosTest"
+            app:destination="@id/resultadosTest" />
+    </fragment>
     <fragment
         android:id="@+id/resultadosCalibracion"
         android:name="com.example.aplicaciontfg.presentation.fragments.ResultadosCalibracion"
@@ -52,5 +70,21 @@
             android:name="pulsoMaximo"
             app:argType="integer"
             android:defaultValue="-1" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultadosTest"
+        android:name="com.example.aplicaciontfg.presentation.fragments.ResultadosTest"
+        android:label="ResultadosTest" >
+        <argument
+            android:name="estadoInicial"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="estadoFinal"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_resultadosTest_to_menuPrincipal"
+            app:destination="@id/menuPrincipal" />
     </fragment>
 </navigation>

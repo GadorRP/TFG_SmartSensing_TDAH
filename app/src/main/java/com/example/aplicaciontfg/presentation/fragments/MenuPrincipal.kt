@@ -8,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.aplicaciontfg.R
 
 
 class MenuPrincipal : Fragment() {
-    val pulsoMinimo = -1
-    val pulsoMaximo = -1
+    var pulsoMinimo = -1
+    var pulsoMaximo = -1
+    val args : MenuPrincipalArgs by navArgs()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -27,7 +29,14 @@ class MenuPrincipal : Fragment() {
         val botonTest = root.findViewById<Button>(R.id.buttonTest)
 
         botonTest.setOnClickListener {
-            findNavController().navigate(R.id.action_menuPrincipal_to_modoTest)
+            //DEPURACION
+            pulsoMinimo = 50
+            pulsoMaximo = 120
+
+
+            findNavController().navigate(MenuPrincipalDirections.actionMenuPrincipalToModoTest(
+                pulsoMinimo = pulsoMinimo, pulsoMaximo = pulsoMaximo)
+            )
         }
 
         //Boton para calibrar
@@ -38,6 +47,14 @@ class MenuPrincipal : Fragment() {
         }
 
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        pulsoMinimo = args.pulsoMinimo
+        pulsoMaximo = args.pulsoMaximo
+
     }
 
 }

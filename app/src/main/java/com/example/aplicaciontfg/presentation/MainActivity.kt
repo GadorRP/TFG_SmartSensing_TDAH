@@ -245,15 +245,15 @@ class MainActivity : AppCompatActivity() {
 
         if (pulsoCardiaco > 0){
             if (pulsoCardiaco > 90){
-                estado.value = Estado.ENMOVIMIENTO.toString()
+                //estado.value = Estado.ENMOVIMIENTO.toString()
                 imagen.value = R.drawable.levantado
             }
             else if (numNervioso > 1){
-                estado.value = Estado.NERVIOSO.toString()
+                //estado.value = Estado.NERVIOSO.toString()
                 imagen.value = R.drawable.nervioso
             }
             else{
-                estado.value = Estado.TRANQUILO.toString()
+                //estado.value = Estado.TRANQUILO.toString()
                 imagen.value = R.drawable.relajado
             }
         }

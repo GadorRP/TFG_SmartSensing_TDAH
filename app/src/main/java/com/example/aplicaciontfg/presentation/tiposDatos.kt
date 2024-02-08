@@ -13,9 +13,11 @@ class GiroscopioDatos () {
 }
 
 enum class Estado {
-    TRANQUILO,
-    NERVIOSO,
-    ENMOVIMIENTO,
+    MUY_RELAJADO,
+    RELAJADO,
+    NORMAL,
+    EXCITADO,
+    MUY_EXCITADO,
     DESCONOCIDO
 }
 

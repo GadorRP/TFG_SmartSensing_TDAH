@@ -29,10 +29,11 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
     private var calibrado = MutableLiveData<Boolean>(false)
     private var pulsoMinimo = MutableLiveData<Int>(-1)
     private var pulsoMaximo = MutableLiveData<Int>(-1)
+    private var obtenerValor = false
+
     private lateinit var actividad: IComunicacionActividadFragmentos
     private lateinit var sensorManager : SensorManager
-    private var obtenerValor = false
-    private var pulsaciones : Sensor? = null
+    private var sensorPulso : Sensor? = null
     private lateinit var textPulso : TextView
 
     private val listenerPulso = object : SensorEventListener {
@@ -62,8 +63,8 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
         savedInstanceState: Bundle?
     ): View? {
         //Registrar listener del sensor
-        pulsaciones = sensorManager!!.getDefaultSensor(Sensor.TYPE_HEART_RATE)
-        sensorManager.registerListener(listenerPulso, pulsaciones, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorPulso = sensorManager!!.getDefaultSensor(Sensor.TYPE_HEART_RATE)
+        sensorManager.registerListener(listenerPulso, sensorPulso, SensorManager.SENSOR_DELAY_NORMAL)
 
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_modo_calibracion, container, false)
@@ -75,7 +76,6 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
         textPulso = root.findViewById<TextView>(R.id.textViewPulso)
 
         pulsoMinimo.observe(viewLifecycleOwner) { nuevoValor ->
-
             if (nuevoValor != -1) {
                 textTitulo.text = "Vamos a movernos"
                 textsubtitulo.text = "Realiza 5 saltos y pulse Tomar Pulso"
@@ -123,7 +123,17 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
     }
 
     private fun stopListening() {
-        sensorManager.unregisterListener(listenerPulso, pulsaciones)
+        sensorManager.unregisterListener(listenerPulso, sensorPulso)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopListening()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sensorManager.registerListener(listenerPulso, sensorPulso, SensorManager.SENSOR_DELAY_NORMAL)
     }
 
     override fun getSenManager(): SensorManager? {
