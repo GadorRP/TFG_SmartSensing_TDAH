@@ -15,6 +15,7 @@ import com.example.aplicaciontfg.R
 class MenuPrincipal : Fragment() {
     var pulsoMinimo = -1
     var pulsoMaximo = -1
+    var calibrado = false
     val args : MenuPrincipalArgs by navArgs()
 
     @SuppressLint("MissingInflatedId")
@@ -30,12 +31,12 @@ class MenuPrincipal : Fragment() {
 
         botonTest.setOnClickListener {
             //DEPURACION
-            pulsoMinimo = 50
-            pulsoMaximo = 120
+            //pulsoMinimo = 50
+            //pulsoMaximo = 120
 
 
             findNavController().navigate(MenuPrincipalDirections.actionMenuPrincipalToModoTest(
-                pulsoMinimo = pulsoMinimo, pulsoMaximo = pulsoMaximo)
+                pulsoMinimo = pulsoMinimo, pulsoMaximo = pulsoMaximo, calibrado = calibrado)
             )
         }
 
@@ -52,9 +53,12 @@ class MenuPrincipal : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        pulsoMinimo = args.pulsoMinimo
-        pulsoMaximo = args.pulsoMaximo
+        if (args.pulsoMinimo != -1 && args.pulsoMaximo != -1 || !calibrado){
+            pulsoMinimo = args.pulsoMinimo
+            pulsoMaximo = args.pulsoMaximo
 
+            calibrado = true
+        }
     }
 
 }

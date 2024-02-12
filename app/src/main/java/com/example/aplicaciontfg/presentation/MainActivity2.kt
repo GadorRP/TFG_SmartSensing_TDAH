@@ -32,9 +32,12 @@ import com.example.aplicaciontfg.R
 
 class MainActivity2 : AppCompatActivity(), IComunicacionActividadFragmentos {
     var permisosDados = false
-    val calibrado = false
     var sensorManager: SensorManager? = null
     val permiso = Manifest.permission.BODY_SENSORS
+
+    val calibrado = false
+    var pulsoMinimo = -1
+    var pulsoMaximo = -1
 
     val requestPermissionLauncher =
         registerForActivityResult(
@@ -54,7 +57,7 @@ class MainActivity2 : AppCompatActivity(), IComunicacionActividadFragmentos {
 
         // Comprobar si tengo ya los permisos
         if (noTengoPermisos()) {
-            requestPermissionLauncher.launch(Manifest.permission.BODY_SENSORS)
+            requestPermissionLauncher.launch(permiso)
         }else {
             permisosDados = true
         }
@@ -75,6 +78,7 @@ class MainActivity2 : AppCompatActivity(), IComunicacionActividadFragmentos {
     override fun getSenManager(): SensorManager? {
         return sensorManager
     }
+
 
 }
 

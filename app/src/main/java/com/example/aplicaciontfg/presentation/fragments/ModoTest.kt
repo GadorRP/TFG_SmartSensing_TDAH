@@ -10,6 +10,8 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
@@ -23,13 +25,16 @@ import com.example.aplicaciontfg.presentation.IComunicacionActividadFragmentos
 class ModoTest : Fragment() , IComunicacionActividadFragmentos{
     private var pulsoMinimo = -1
     private var pulsoMaximo = -1
-    private val args : MenuPrincipalArgs by navArgs()
+    private var calibrado = false
+    private val args : ModoTestArgs by navArgs()
     private var obtenerEvSensor = false
 
     private var rangoAbsoluto = -1
     private var rangoIntervalo = -1
     private var estadoInicial = MutableLiveData<Int>(-1)
     private var estadoFinal = MutableLiveData<Int>(-1)
+    private lateinit var textoCalibrado: TextView
+    private lateinit var textoPrincipal: TextView
 
     private lateinit var actividad: IComunicacionActividadFragmentos
     private lateinit var sensorManager : SensorManager
@@ -58,18 +63,17 @@ class ModoTest : Fragment() , IComunicacionActividadFragmentos{
         savedInstanceState: Bundle?
     ): View? {
 
-        //Registrar listener del sensor
-        sensorPulso = sensorManager!!.getDefaultSensor(Sensor.TYPE_HEART_RATE)
-        sensorManager.registerListener(listenerPulso, sensorPulso, SensorManager.SENSOR_DELAY_NORMAL)
 
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_modo_test, container, false)
 
-        val texto = root.findViewById<TextView>(R.id.tvTest1)
+        textoCalibrado = root.findViewById<TextView>(R.id.tvCalibrado)
+
+        textoPrincipal = root.findViewById<TextView>(R.id.tvTest1)
 
         estadoInicial.observe(viewLifecycleOwner) { nuevoEstado ->
             if (nuevoEstado != -1) {
-                texto.text = "Al finalizar la prueba pulse el botón para obtener su estado"
+                textoPrincipal.text = "Al finalizar la prueba pulse Estado para terminar"
             }
         }
 
@@ -94,6 +98,8 @@ class ModoTest : Fragment() , IComunicacionActividadFragmentos{
         val botonVolver = root.findViewById<Button>(R.id.buttonTestVolver)
 
         botonVolver.setOnClickListener {
+            stopListening()
+
             findNavController().navigate(R.id.action_modoTest_to_menuPrincipal)
         }
 
@@ -103,11 +109,25 @@ class ModoTest : Fragment() , IComunicacionActividadFragmentos{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        pulsoMinimo = args.pulsoMinimo
-        pulsoMaximo = args.pulsoMaximo
+        calibrado = args.calibrado;
 
-        rangoAbsoluto = pulsoMaximo - pulsoMinimo
-        rangoIntervalo = rangoAbsoluto / 5
+        if (calibrado) {
+            pulsoMinimo = args.pulsoMinimo
+            pulsoMaximo = args.pulsoMaximo
+
+            rangoAbsoluto = pulsoMaximo - pulsoMinimo
+            rangoIntervalo = rangoAbsoluto / 5
+            Log.d("valorRango" , rangoIntervalo.toString())
+
+            //Registrar listener del sensor
+            sensorPulso = sensorManager!!.getDefaultSensor(Sensor.TYPE_HEART_RATE)
+            sensorManager.registerListener(listenerPulso, sensorPulso, SensorManager.SENSOR_DELAY_NORMAL)
+
+            textoCalibrado.visibility = INVISIBLE
+            textoPrincipal.visibility = VISIBLE
+        }
+
+
     }
 
     private fun obtenerEstado(valorPulso : Int) {
@@ -124,7 +144,6 @@ class ModoTest : Fragment() , IComunicacionActividadFragmentos{
                     Log.d("valorPulsoFinal" , valorPulso.toString())
                 }
 
-
                 return
             }else{
                 estado++
@@ -134,7 +153,8 @@ class ModoTest : Fragment() , IComunicacionActividadFragmentos{
     }
 
     private fun stopListening() {
-        sensorManager.unregisterListener(listenerPulso, sensorPulso)
+        if (sensorPulso != null)
+            sensorManager.unregisterListener(listenerPulso, sensorPulso)
     }
 
     /**override fun onPause() {

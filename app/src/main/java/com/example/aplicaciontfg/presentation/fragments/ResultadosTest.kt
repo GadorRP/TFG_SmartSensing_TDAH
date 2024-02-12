@@ -49,7 +49,7 @@ class ResultadosTest : Fragment() {
         traducirEstado()
 
         val textoEstados = view.findViewById<TextView>(R.id.tvResultadosTest)
-        textoEstados.text = "Estado Inicial: ${estadoInicialString.lowercase()} \n Estado Final: ${estadoFinalString.lowercase()}"
+        textoEstados.text = "Inicial: ${estadoInicialString.lowercase()} \n Final: ${estadoFinalString.lowercase()}"
     }
 
     private fun traducirEstado(){

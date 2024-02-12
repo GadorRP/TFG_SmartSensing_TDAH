@@ -28,17 +28,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="50dp"
-        android:text="Antes de comenzar la prueba pulse el botón para obtener su estado"
+        android:text="Antes de comenzar la prueba pulse Estado"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="18sp" />
+        android:visibility="invisible"
+        android:textSize="17sp" />
 
     <Button
         android:id="@+id/buttonEstado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="30dp"
         android:text="ESTADO" />
 
     <Button
@@ -46,9 +47,22 @@
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_gravity="center"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="72dp"
         android:text="Volver" />
 
+
+        <TextView
+            android:id="@+id/tvCalibrado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="CALIBRE EL RELOJ ANTES DE CONTINUAR"
+            android:textAlignment="center"
+            android:textColor="@color/red"
+            android:textSize="20sp"
+            android:visibility="visible" />
+
     </FrameLayout>
+
 
 </androidx.wear.widget.BoxInsetLayout>

@@ -101,6 +101,7 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
         val botonVolver = root.findViewById<Button>(R.id.buttonCalVolver)
 
         botonVolver.setOnClickListener {
+            stopListening()
             findNavController().navigate(R.id.action_modoCalibracion_to_menuPrincipal)
         }
 

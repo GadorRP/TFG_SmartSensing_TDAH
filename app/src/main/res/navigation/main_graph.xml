@@ -44,9 +44,15 @@
         android:label="fragment_modo_test"
         tools:layout="@layout/fragment_modo_test" >
         <argument android:name="pulsoMinimo"
-            app:argType="integer" />
+            app:argType="integer"
+            android:defaultValue="-1" />
         <argument android:name="pulsoMaximo"
-            app:argType="integer" />
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="calibrado"
+            app:argType="boolean"
+            android:defaultValue="false" />
         <action
             android:id="@+id/action_modoTest_to_menuPrincipal"
             app:destination="@id/menuPrincipal" />

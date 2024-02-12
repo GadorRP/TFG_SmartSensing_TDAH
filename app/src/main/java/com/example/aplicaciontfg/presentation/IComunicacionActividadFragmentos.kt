@@ -4,4 +4,5 @@ import android.hardware.SensorManager
 
 interface IComunicacionActividadFragmentos {
     fun getSenManager() : SensorManager?
+
 }
