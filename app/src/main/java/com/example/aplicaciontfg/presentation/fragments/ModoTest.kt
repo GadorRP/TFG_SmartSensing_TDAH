@@ -15,14 +15,16 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.aplicaciontfg.R
+import com.example.aplicaciontfg.presentation.DatosViewModel
 import com.example.aplicaciontfg.presentation.IComunicacionActividadFragmentos
 
 
-class ModoTest : Fragment() , IComunicacionActividadFragmentos{
+class ModoTest : Fragment() {
     private var pulsoMinimo = -1
     private var pulsoMaximo = -1
     private var calibrado = false
@@ -39,6 +41,7 @@ class ModoTest : Fragment() , IComunicacionActividadFragmentos{
     private lateinit var actividad: IComunicacionActividadFragmentos
     private lateinit var sensorManager : SensorManager
     private var sensorPulso : Sensor? = null
+    private val viewModel by viewModels<DatosViewModel>()
 
     private val listenerPulso = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent?) {
@@ -56,6 +59,13 @@ class ModoTest : Fragment() , IComunicacionActividadFragmentos{
 
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        //actividad = viewModel.getActividad()
+        sensorManager = viewModel.getSenManager()!!
     }
 
     override fun onCreateView(
@@ -109,7 +119,25 @@ class ModoTest : Fragment() , IComunicacionActividadFragmentos{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        calibrado = args.calibrado;
+        calibrado = viewModel.getCalibrado();
+
+        if (calibrado) {
+            pulsoMinimo = viewModel.getPulsoMinimo()
+            pulsoMaximo = viewModel.getPulsoMaximo()
+
+            rangoAbsoluto = pulsoMaximo - pulsoMinimo
+            rangoIntervalo = rangoAbsoluto / 5
+            Log.d("valorRango" , rangoIntervalo.toString())
+
+            //Registrar listener del sensor
+            sensorPulso = sensorManager!!.getDefaultSensor(Sensor.TYPE_HEART_RATE)
+            sensorManager.registerListener(listenerPulso, sensorPulso, SensorManager.SENSOR_DELAY_NORMAL)
+
+            textoCalibrado.visibility = INVISIBLE
+            textoPrincipal.visibility = VISIBLE
+        }
+
+        /*calibrado = args.calibrado;
 
         if (calibrado) {
             pulsoMinimo = args.pulsoMinimo
@@ -125,7 +153,7 @@ class ModoTest : Fragment() , IComunicacionActividadFragmentos{
 
             textoCalibrado.visibility = INVISIBLE
             textoPrincipal.visibility = VISIBLE
-        }
+        }*/
 
 
     }
@@ -167,7 +195,7 @@ class ModoTest : Fragment() , IComunicacionActividadFragmentos{
         sensorManager.registerListener(listenerPulso, sensorPulso, SensorManager.SENSOR_DELAY_NORMAL)
     }**/
 
-    override fun onAttach(context: Context) {
+    /*override fun onAttach(context: Context) {
         super.onAttach(context)
 
         if (context is IComunicacionActividadFragmentos) {
@@ -181,6 +209,6 @@ class ModoTest : Fragment() , IComunicacionActividadFragmentos{
 
     override fun getSenManager(): SensorManager? {
         return actividad.getSenManager()
-    }
+    }*/
 
 }

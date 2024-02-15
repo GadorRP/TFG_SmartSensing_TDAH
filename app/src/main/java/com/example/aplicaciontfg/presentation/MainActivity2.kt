@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,18 +27,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.ViewModelProvider
 import com.example.aplicaciontfg.R
 
-class MainActivity2 : AppCompatActivity(), IComunicacionActividadFragmentos {
-    var permisosDados = false
-    var sensorManager: SensorManager? = null
-    val permiso = Manifest.permission.BODY_SENSORS
+class MainActivity2 : AppCompatActivity() {
+    private var permisosDados = false
+    private var sensorManager: SensorManager? = null
+    private val permiso = Manifest.permission.BODY_SENSORS
+    private val viewModel : DatosViewModel by viewModels()
 
-    val calibrado = false
-    var pulsoMinimo = -1
-    var pulsoMaximo = -1
 
     val requestPermissionLauncher =
         registerForActivityResult(
@@ -64,6 +65,11 @@ class MainActivity2 : AppCompatActivity(), IComunicacionActividadFragmentos {
 
         if (permisosDados){
             sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+
+            viewModel.setSenManager(sensorManager!!)
+            viewModel.setPulsoMaximo(100)
+            Log.d("Pulso actividad", viewModel.getPulsoMaximo().toString())
+
             setContentView(R.layout.activity_main)
         }
 
@@ -73,12 +79,6 @@ class MainActivity2 : AppCompatActivity(), IComunicacionActividadFragmentos {
         return checkSelfPermission(Manifest.permission.BODY_SENSORS) !=
                 PackageManager.PERMISSION_GRANTED
     }
-
-
-    override fun getSenManager(): SensorManager? {
-        return sensorManager
-    }
-
 
 }
 

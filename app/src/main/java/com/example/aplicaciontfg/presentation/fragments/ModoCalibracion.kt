@@ -16,22 +16,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.aplicaciontfg.R
+import com.example.aplicaciontfg.presentation.DatosViewModel
 import com.example.aplicaciontfg.presentation.IComunicacionActividadFragmentos
 
 
-class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
+class ModoCalibracion : Fragment() {
     private var calibrado = MutableLiveData<Boolean>(false)
     private var pulsoMinimo = MutableLiveData<Int>(-1)
     private var pulsoMaximo = MutableLiveData<Int>(-1)
     private var obtenerValor = false
+    private val viewModel by viewModels<DatosViewModel>()
 
-    private lateinit var actividad: IComunicacionActividadFragmentos
+    //private lateinit var actividad: Activity
     private lateinit var sensorManager : SensorManager
     private var sensorPulso : Sensor? = null
     private lateinit var textPulso : TextView
@@ -57,6 +61,14 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        Log.d("Imprime viewmodel", viewModel.getSenManager().toString())
+        Log.d("Imprime pulso", viewModel.getPulsoMaximo().toString())
+        //actividad = viewModel.getActividad()
+        sensorManager = viewModel.getSenManager()!!
+    }
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,6 +84,7 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
         val textTitulo = root.findViewById<TextView>(R.id.textView1Cal)
 
         val textsubtitulo = root.findViewById<TextView>(R.id.textView2Cal)
+
 
         textPulso = root.findViewById<TextView>(R.id.textViewPulso)
 
@@ -108,8 +121,9 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
         return root
     }
 
-    override fun onAttach(context: Context) {
+    /*override fun onAttach(context: Context) {
         super.onAttach(context)
+
 
         if (context is IComunicacionActividadFragmentos) {
             actividad = context
@@ -117,7 +131,7 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
         } else {
             throw RuntimeException("La actividad no implementa la interfaz IComunicacionActividadFragmento")
         }
-    }
+    }*/
 
     fun tomarPulso() {
         obtenerValor = true
@@ -136,11 +150,6 @@ class ModoCalibracion : Fragment(), IComunicacionActividadFragmentos {
         super.onResume()
         sensorManager.registerListener(listenerPulso, sensorPulso, SensorManager.SENSOR_DELAY_NORMAL)
     }
-
-    override fun getSenManager(): SensorManager? {
-        return actividad.getSenManager()
-    }
-
 
 
 }
