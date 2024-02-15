@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -18,7 +19,7 @@ class ResultadosCalibracion : Fragment() {
     var pulsoMinimo = -1
     var pulsoMaximo = -1
     val args : ResultadosCalibracionArgs by navArgs()
-    private val viewModel by viewModels<DatosViewModel>()
+    private val viewModel : DatosViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

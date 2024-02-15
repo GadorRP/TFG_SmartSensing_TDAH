@@ -15,6 +15,8 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
@@ -41,7 +43,7 @@ class ModoTest : Fragment() {
     private lateinit var actividad: IComunicacionActividadFragmentos
     private lateinit var sensorManager : SensorManager
     private var sensorPulso : Sensor? = null
-    private val viewModel by viewModels<DatosViewModel>()
+    private val viewModel : DatosViewModel by activityViewModels()
 
     private val listenerPulso = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent?) {

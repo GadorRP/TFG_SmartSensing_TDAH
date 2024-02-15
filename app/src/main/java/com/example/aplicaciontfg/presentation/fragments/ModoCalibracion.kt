@@ -19,6 +19,7 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -33,7 +34,7 @@ class ModoCalibracion : Fragment() {
     private var pulsoMinimo = MutableLiveData<Int>(-1)
     private var pulsoMaximo = MutableLiveData<Int>(-1)
     private var obtenerValor = false
-    private val viewModel by viewModels<DatosViewModel>()
+    private val viewModel : DatosViewModel by activityViewModels()
 
     //private lateinit var actividad: Activity
     private lateinit var sensorManager : SensorManager

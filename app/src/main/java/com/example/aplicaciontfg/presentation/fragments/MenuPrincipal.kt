@@ -7,14 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.aplicaciontfg.R
+import com.example.aplicaciontfg.presentation.DatosViewModel
 
 
 class MenuPrincipal : Fragment() {
     //val args : MenuPrincipalArgs by navArgs()
     //habia pulso minimo maximo y calibrado
+
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(

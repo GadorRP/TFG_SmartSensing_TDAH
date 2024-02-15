@@ -1,6 +1,7 @@
 package com.example.aplicaciontfg.presentation
 
 import android.Manifest
+import androidx.fragment.app.activityViewModels
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.hardware.SensorManager
