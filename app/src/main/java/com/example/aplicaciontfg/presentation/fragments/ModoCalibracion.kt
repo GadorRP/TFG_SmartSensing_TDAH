@@ -122,17 +122,6 @@ class ModoCalibracion : Fragment() {
         return root
     }
 
-    /*override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-
-        if (context is IComunicacionActividadFragmentos) {
-            actividad = context
-            sensorManager = actividad.getSenManager()!!
-        } else {
-            throw RuntimeException("La actividad no implementa la interfaz IComunicacionActividadFragmento")
-        }
-    }*/
 
     fun tomarPulso() {
         obtenerValor = true

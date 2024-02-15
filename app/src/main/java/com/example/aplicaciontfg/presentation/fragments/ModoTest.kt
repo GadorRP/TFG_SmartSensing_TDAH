@@ -139,25 +139,6 @@ class ModoTest : Fragment() {
             textoPrincipal.visibility = VISIBLE
         }
 
-        /*calibrado = args.calibrado;
-
-        if (calibrado) {
-            pulsoMinimo = args.pulsoMinimo
-            pulsoMaximo = args.pulsoMaximo
-
-            rangoAbsoluto = pulsoMaximo - pulsoMinimo
-            rangoIntervalo = rangoAbsoluto / 5
-            Log.d("valorRango" , rangoIntervalo.toString())
-
-            //Registrar listener del sensor
-            sensorPulso = sensorManager!!.getDefaultSensor(Sensor.TYPE_HEART_RATE)
-            sensorManager.registerListener(listenerPulso, sensorPulso, SensorManager.SENSOR_DELAY_NORMAL)
-
-            textoCalibrado.visibility = INVISIBLE
-            textoPrincipal.visibility = VISIBLE
-        }*/
-
-
     }
 
     private fun obtenerEstado(valorPulso : Int) {
@@ -197,20 +178,5 @@ class ModoTest : Fragment() {
         sensorManager.registerListener(listenerPulso, sensorPulso, SensorManager.SENSOR_DELAY_NORMAL)
     }**/
 
-    /*override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        if (context is IComunicacionActividadFragmentos) {
-            actividad = context
-            sensorManager = actividad.getSenManager()!!
-        } else {
-            throw RuntimeException("La actividad no implementa la interfaz IComunicacionActividadFragmento")
-        }
-    }
-
-
-    override fun getSenManager(): SensorManager? {
-        return actividad.getSenManager()
-    }*/
 
 }

@@ -15,9 +15,6 @@ import com.example.aplicaciontfg.presentation.DatosViewModel
 
 
 class MenuPrincipal : Fragment() {
-    //val args : MenuPrincipalArgs by navArgs()
-    //habia pulso minimo maximo y calibrado
-
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -27,19 +24,10 @@ class MenuPrincipal : Fragment() {
         val root = inflater.inflate(R.layout.fragment_menu_principal, container, false)
 
         //Boton para test
-
         val botonTest = root.findViewById<Button>(R.id.buttonTest)
 
         botonTest.setOnClickListener {
             findNavController().navigate(R.id.action_menuPrincipal_to_modoTest)
-            //DEPURACION
-            //pulsoMinimo = 50
-            //pulsoMaximo = 120
-
-
-            //findNavController().navigate(MenuPrincipalDirections.actionMenuPrincipalToModoTest(
-            //    pulsoMinimo = pulsoMinimo, pulsoMaximo = pulsoMaximo, calibrado = calibrado)
-            //)
         }
 
         //Boton para calibrar
@@ -51,16 +39,5 @@ class MenuPrincipal : Fragment() {
 
         return root
     }
-
-    /*override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        if (args.pulsoMinimo != -1 && args.pulsoMaximo != -1 || !calibrado){
-            pulsoMinimo = args.pulsoMinimo
-            pulsoMaximo = args.pulsoMaximo
-
-            calibrado = true
-        }
-    }*/
 
 }
