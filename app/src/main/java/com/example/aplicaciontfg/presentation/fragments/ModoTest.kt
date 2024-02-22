@@ -29,6 +29,9 @@ import com.example.aplicaciontfg.presentation.IComunicacionActividadFragmentos
 class ModoTest : Fragment() {
     private var pulsoMinimo = -1
     private var pulsoMaximo = -1
+
+    private var pulsoInicial = MutableLiveData<Int>(-1)
+    private var pulsoFinal = MutableLiveData<Int>(-1)
     private var calibrado = false
     private val args : ModoTestArgs by navArgs()
     private var obtenerEvSensor = false
@@ -47,14 +50,22 @@ class ModoTest : Fragment() {
 
     private val listenerPulso = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent?) {
-            if (event != null) {
-                Log.d("EventoTest" , event.values[0].toString())
-            }
+            //Depuracion
+            //if (event != null) {
+            //    Log.d("EventoTest" , event.values[0].toString())
+            //}
 
             if (event != null && obtenerEvSensor && event.values[0] > 0){
                 obtenerEvSensor = false
 
-                obtenerEstado(event.values[0].toInt())
+                if (pulsoInicial.value == -1)
+                    pulsoInicial.value = event.values[0].toInt()
+                else{
+                    pulsoFinal.value = event.values[0].toInt()
+                    Log.d("valorPulsoFinal" , pulsoFinal.value.toString())
+                }
+
+                //obtenerEstado(event.values[0].toInt())
             }
 
         }
@@ -66,7 +77,6 @@ class ModoTest : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //actividad = viewModel.getActividad()
         sensorManager = viewModel.getSenManager()!!
     }
 
@@ -83,19 +93,21 @@ class ModoTest : Fragment() {
 
         textoPrincipal = root.findViewById<TextView>(R.id.tvTest1)
 
-        estadoInicial.observe(viewLifecycleOwner) { nuevoEstado ->
+        //era pulsoInicial y no pulsoInicial
+        pulsoInicial.observe(viewLifecycleOwner) { nuevoEstado ->
             if (nuevoEstado != -1) {
                 textoPrincipal.text = "Al finalizar la prueba pulse Estado para terminar"
             }
         }
 
-        estadoFinal.observe(viewLifecycleOwner) { nuevoEstado ->
+        //era estado final y no pulsoFinal
+        pulsoFinal.observe(viewLifecycleOwner) { nuevoEstado ->
             if (nuevoEstado != -1) {
                 stopListening()
-                Log.d("valorEstadoInicial" , estadoInicial.value.toString())
-                Log.d("valorEstadoFinal" , estadoFinal.value.toString())
+                obtenerEstado()
                 findNavController().navigate(ModoTestDirections.actionModoTestToResultadosTest(
-                    estadoInicial = estadoInicial.value!!, estadoFinal = estadoFinal.value!!)
+                    estadoInicial = estadoInicial.value!!, estadoFinal = estadoFinal.value!!,
+                    pulsoInicial = pulsoInicial.value!!, pulsoFinal = pulsoFinal.value!!)
                 )
 
             }
@@ -121,7 +133,14 @@ class ModoTest : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //DEPURACION
+        //viewModel.setPulsoMaximo(120)
+        //viewModel.setPulsoMinimo(70)
+        //viewModel.setCalibrado(true)
+
+
         calibrado = viewModel.getCalibrado();
+
 
         if (calibrado) {
             pulsoMinimo = viewModel.getPulsoMinimo()
@@ -141,11 +160,69 @@ class ModoTest : Fragment() {
 
     }
 
+    private fun obtenerEstado(){
+        var estado = 0
+        var asignado = false
+
+        for (i in pulsoMinimo..pulsoMaximo step rangoIntervalo){
+            if (!asignado) {
+                if (pulsoInicial.value!! >= i && pulsoInicial.value!! < i + rangoIntervalo ){
+                    if (estadoInicial.value == -1){
+                        estadoInicial.value = estado
+                        Log.d("valorPulsoInicial" , pulsoInicial.value.toString())
+                        asignado = true
+                    }
+                }else if (pulsoInicial.value!! < pulsoMinimo){
+                    if (estadoInicial.value == -1){
+                        estadoInicial.value = 0
+                        asignado = true
+                    }
+                }else if (pulsoInicial.value!! > pulsoMaximo){
+                    if (estadoInicial.value == -1){
+                        estadoInicial.value = 4
+                        asignado = true
+                    }
+                }
+                else{
+                    estado++
+                }
+            }
+        }
+
+        estado = 0
+
+        Log.d("PREPulsoFinal" , pulsoFinal.value.toString())
+        for (i in pulsoMinimo..pulsoMaximo step rangoIntervalo){
+            if (pulsoFinal.value!! >= i && pulsoFinal.value!! < i + rangoIntervalo ){
+                if (estadoFinal.value == -1){
+                    estadoFinal.value = estado
+                    Log.d("valorPulsoFinal" , pulsoFinal.value.toString())
+                }
+                return
+            }else if (pulsoFinal.value!! < pulsoMinimo){
+                if (estadoFinal.value == -1){
+                    estadoFinal.value = 0
+                }
+                return
+            }else if (pulsoFinal.value!! > pulsoMaximo){
+                if (estadoFinal.value == -1){
+                    estadoFinal.value = 4
+                }
+                return
+            }
+            else{
+                estado++
+            }
+        }
+
+    }
+
+    //CAMBIADO PARA NO HACERLO CON EL SENSOR
     private fun obtenerEstado(valorPulso : Int) {
         var estado = 0
 
         for (i in pulsoMinimo..pulsoMaximo step rangoIntervalo){
-            if (valorPulso >= i && valorPulso < i + rangoIntervalo){
+            if (valorPulso >= i && valorPulso < i + rangoIntervalo ){
                 if (estadoInicial.value == -1){
                     estadoInicial.value = estado
                     Log.d("valorPulsoInicial" , valorPulso.toString())
@@ -156,7 +233,26 @@ class ModoTest : Fragment() {
                 }
 
                 return
-            }else{
+            }else if (valorPulso < pulsoMinimo){
+                if (estadoInicial.value == -1){
+                    estadoInicial.value = 0
+                }
+                else{
+                    estadoFinal.value = 0
+                }
+
+                return
+            }else if (valorPulso > pulsoMaximo){
+                if (estadoInicial.value == -1){
+                    estadoInicial.value = 4
+                }
+                else{
+                    estadoFinal.value = 4
+                }
+
+                return
+            }
+            else{
                 estado++
             }
         }

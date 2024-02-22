@@ -18,6 +18,7 @@ import com.example.aplicaciontfg.presentation.DatosViewModel
 class ResultadosCalibracion : Fragment() {
     var pulsoMinimo = -1
     var pulsoMaximo = -1
+    var malCalibrado = false
     val args : ResultadosCalibracionArgs by navArgs()
     private val viewModel : DatosViewModel by activityViewModels()
 
@@ -27,15 +28,29 @@ class ResultadosCalibracion : Fragment() {
         pulsoMinimo = args.pulsoMinimo
         pulsoMaximo = args.pulsoMaximo
 
+        //DEPURACION
+        //pulsoMinimo = 80
+        //pulsoMaximo = 20
+
         if (pulsoMinimo != -1 && pulsoMaximo != -1){
-            viewModel.setPulsoMinimo(pulsoMinimo)
-            viewModel.setPulsoMaximo(pulsoMaximo)
-            viewModel.setCalibrado(true)
+
+            if (pulsoMinimo < pulsoMaximo){
+                viewModel.setPulsoMinimo(pulsoMinimo)
+                viewModel.setPulsoMaximo(pulsoMaximo)
+                viewModel.setCalibrado(true)
+            }else {
+                malCalibrado = true
+            }
         }
 
-
         val textoPulsaciones = view.findViewById<TextView>(R.id.tvResultadosCal)
-        textoPulsaciones.text = "Tu pulso mínimo es $pulsoMinimo \n Tu pulso máximo es $pulsoMaximo"
+
+        if (!malCalibrado){
+            textoPulsaciones.text = "Tu pulso mínimo es $pulsoMinimo \n Tu pulso máximo es $pulsoMaximo"
+        }
+        else {
+            textoPulsaciones.text = "No se ha calibrado correctamente"
+        }
     }
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(

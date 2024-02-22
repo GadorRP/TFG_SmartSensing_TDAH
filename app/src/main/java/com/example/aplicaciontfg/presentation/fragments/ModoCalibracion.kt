@@ -64,10 +64,7 @@ class ModoCalibracion : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        Log.d("Imprime viewmodel", viewModel.getSenManager().toString())
-        Log.d("Imprime pulso", viewModel.getPulsoMaximo().toString())
-        //actividad = viewModel.getActividad()
+        
         sensorManager = viewModel.getSenManager()!!
     }
     @SuppressLint("MissingInflatedId")
@@ -131,7 +128,7 @@ class ModoCalibracion : Fragment() {
         sensorManager.unregisterListener(listenerPulso, sensorPulso)
     }
 
-    override fun onPause() {
+    /*override fun onPause() {
         super.onPause()
         stopListening()
     }
@@ -139,7 +136,7 @@ class ModoCalibracion : Fragment() {
     override fun onResume() {
         super.onResume()
         sensorManager.registerListener(listenerPulso, sensorPulso, SensorManager.SENSOR_DELAY_NORMAL)
-    }
+    }*/
 
 
 }

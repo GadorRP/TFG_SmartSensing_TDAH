@@ -18,6 +18,8 @@ import com.example.aplicaciontfg.presentation.Estado
 class ResultadosTest : Fragment() {
     var estadoInicialInt = -1
     var estadoFinalInt = -1
+    var pulsoInicial = -1
+    var pulsoFinal = -1
     var estadoInicialString = Estado.DESCONOCIDO.toString()
     var estadoFinalString = Estado.DESCONOCIDO.toString()
     val args : ResultadosTestArgs by navArgs()
@@ -40,16 +42,20 @@ class ResultadosTest : Fragment() {
         return root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         estadoInicialInt = args.estadoInicial
         estadoFinalInt = args.estadoFinal
+        pulsoInicial = args.pulsoInicial
+        pulsoFinal = args.pulsoFinal
 
         traducirEstado()
 
         val textoEstados = view.findViewById<TextView>(R.id.tvResultadosTest)
-        textoEstados.text = "Inicial: ${estadoInicialString.lowercase()} \n Final: ${estadoFinalString.lowercase()}"
+        textoEstados.text = "Inicial: ${estadoInicialString.lowercase()} $pulsoInicial \n" +
+                " Final: ${estadoFinalString.lowercase()} $pulsoFinal \n"
     }
 
     private fun traducirEstado(){

@@ -92,5 +92,13 @@
         <action
             android:id="@+id/action_resultadosTest_to_menuPrincipal"
             app:destination="@id/menuPrincipal" />
+        <argument
+            android:name="pulsoInicial"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="pulsoFinal"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
 </navigation>
