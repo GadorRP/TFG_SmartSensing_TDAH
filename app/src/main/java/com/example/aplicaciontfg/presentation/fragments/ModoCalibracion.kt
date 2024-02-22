@@ -64,7 +64,7 @@ class ModoCalibracion : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         sensorManager = viewModel.getSenManager()!!
     }
     @SuppressLint("MissingInflatedId")

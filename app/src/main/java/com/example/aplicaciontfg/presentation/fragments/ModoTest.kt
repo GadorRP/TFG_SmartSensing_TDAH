@@ -134,8 +134,8 @@ class ModoTest : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //DEPURACION
-        //viewModel.setPulsoMaximo(120)
-        //viewModel.setPulsoMinimo(70)
+        //viewModel.setPulsoMaximo(111)
+        //viewModel.setPulsoMinimo(80)
         //viewModel.setCalibrado(true)
 
 
@@ -148,6 +148,18 @@ class ModoTest : Fragment() {
 
             rangoAbsoluto = pulsoMaximo - pulsoMinimo
             rangoIntervalo = rangoAbsoluto / 5
+
+            var resto = rangoAbsoluto  % 5
+
+            //comprobaciones
+            if (resto > 2.5){
+                rangoIntervalo += 1
+            }
+            else if (rangoIntervalo == 0){
+                rangoIntervalo = 1
+            }
+
+
             Log.d("valorRango" , rangoIntervalo.toString())
 
             //Registrar listener del sensor
@@ -163,6 +175,7 @@ class ModoTest : Fragment() {
     private fun obtenerEstado(){
         var estado = 0
         var asignado = false
+        pulsoInicial.value = 110
 
         for (i in pulsoMinimo..pulsoMaximo step rangoIntervalo){
             if (!asignado) {
@@ -172,12 +185,12 @@ class ModoTest : Fragment() {
                         Log.d("valorPulsoInicial" , pulsoInicial.value.toString())
                         asignado = true
                     }
-                }else if (pulsoInicial.value!! < pulsoMinimo){
+                }else if (pulsoInicial.value!! <= pulsoMinimo){
                     if (estadoInicial.value == -1){
                         estadoInicial.value = 0
                         asignado = true
                     }
-                }else if (pulsoInicial.value!! > pulsoMaximo){
+                }else if (pulsoInicial.value!! >= pulsoMaximo){
                     if (estadoInicial.value == -1){
                         estadoInicial.value = 4
                         asignado = true

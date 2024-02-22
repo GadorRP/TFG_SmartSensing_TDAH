@@ -51,6 +51,7 @@ class ResultadosTest : Fragment() {
         pulsoInicial = args.pulsoInicial
         pulsoFinal = args.pulsoFinal
 
+
         traducirEstado()
 
         val textoEstados = view.findViewById<TextView>(R.id.tvResultadosTest)
@@ -65,6 +66,8 @@ class ResultadosTest : Fragment() {
             2 -> estadoInicialString = Estado.NORMAL.toString()
             3 -> estadoInicialString = Estado.EXCITADO.toString()
             4 -> estadoInicialString = Estado.MUY_EXCITADO.toString()
+            //dependiendo del intervalo (por la aproximacion) puede haber algún valor no obtenido en el 4
+            5 -> estadoInicialString = Estado.MUY_EXCITADO.toString()
             else -> estadoInicialString  = Estado.DESCONOCIDO.toString()
         }
 
@@ -74,6 +77,7 @@ class ResultadosTest : Fragment() {
             2 -> estadoFinalString = Estado.NORMAL.toString()
             3 -> estadoFinalString = Estado.EXCITADO.toString()
             4 -> estadoFinalString = Estado.MUY_EXCITADO.toString()
+            5 -> estadoInicialString = Estado.MUY_EXCITADO.toString()
             else -> estadoFinalString  = Estado.DESCONOCIDO.toString()
         }
 
