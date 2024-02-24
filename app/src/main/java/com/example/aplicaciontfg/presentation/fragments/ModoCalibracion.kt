@@ -1,32 +1,22 @@
 package com.example.aplicaciontfg.presentation.fragments
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
-import android.content.Context.SENSOR_SERVICE
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.aplicaciontfg.R
 import com.example.aplicaciontfg.presentation.DatosViewModel
-import com.example.aplicaciontfg.presentation.IComunicacionActividadFragmentos
 
 
 class ModoCalibracion : Fragment() {

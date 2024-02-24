@@ -9,7 +9,6 @@ class DatosViewModel : ViewModel() {
     private var pulsoMinimo = -1
     private var pulsoMaximo = -1
     private var calibrado = false
-    private var actividad : Activity? = null
     private var sensorManager: SensorManager? = null
 
     fun setSenManager(nuevoSensorManager: SensorManager) {
@@ -20,13 +19,6 @@ class DatosViewModel : ViewModel() {
         return sensorManager
     }
 
-    fun setActividad(nuevaActividad: Activity) {
-        actividad = nuevaActividad
-    }
-
-    fun getActividad(): Activity? {
-        return actividad
-    }
 
     fun getPulsoMinimo(): Int {
         return pulsoMinimo

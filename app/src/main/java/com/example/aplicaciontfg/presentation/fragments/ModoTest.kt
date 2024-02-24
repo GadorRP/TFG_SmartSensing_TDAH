@@ -1,6 +1,5 @@
 package com.example.aplicaciontfg.presentation.fragments
 
-import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -15,15 +14,12 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.aplicaciontfg.R
 import com.example.aplicaciontfg.presentation.DatosViewModel
-import com.example.aplicaciontfg.presentation.IComunicacionActividadFragmentos
 
 
 class ModoTest : Fragment() {
@@ -43,7 +39,6 @@ class ModoTest : Fragment() {
     private lateinit var textoCalibrado: TextView
     private lateinit var textoPrincipal: TextView
 
-    private lateinit var actividad: IComunicacionActividadFragmentos
     private lateinit var sensorManager : SensorManager
     private var sensorPulso : Sensor? = null
     private val viewModel : DatosViewModel by activityViewModels()
@@ -175,7 +170,6 @@ class ModoTest : Fragment() {
     private fun obtenerEstado(){
         var estado = 0
         var asignado = false
-        pulsoInicial.value = 110
 
         for (i in pulsoMinimo..pulsoMaximo step rangoIntervalo){
             if (!asignado) {
@@ -204,7 +198,7 @@ class ModoTest : Fragment() {
 
         estado = 0
 
-        Log.d("PREPulsoFinal" , pulsoFinal.value.toString())
+
         for (i in pulsoMinimo..pulsoMaximo step rangoIntervalo){
             if (pulsoFinal.value!! >= i && pulsoFinal.value!! < i + rangoIntervalo ){
                 if (estadoFinal.value == -1){
