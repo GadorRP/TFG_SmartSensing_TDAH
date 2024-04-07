@@ -1,10 +1,13 @@
 package com.example.aplicaciontfg.presentation.fragments
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.os.PowerManager
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -44,11 +47,20 @@ class ModoTest : Fragment() {
     private val viewModel : DatosViewModel by activityViewModels()
 
     private val listenerPulso = object : SensorEventListener {
+        @SuppressLint("InvalidWakeLockTag")
         override fun onSensorChanged(event: SensorEvent?) {
             //Depuracion
-            //if (event != null) {
-            //    Log.d("EventoTest" , event.values[0].toString())
-            //}
+            if (event != null) {
+                Log.d("EventoTest" , event.values[0].toString())
+            }
+
+            if (event != null && event.values[0] > 70){
+                val powerManager = requireActivity().getSystemService(Context.POWER_SERVICE) as PowerManager
+                val wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "MyWakeLock")
+                wakeLock.acquire()
+                // Enciende la pantalla
+                wakeLock.release()
+            }
 
             if (event != null && obtenerEvSensor && event.values[0] > 0){
                 obtenerEvSensor = false
@@ -133,9 +145,10 @@ class ModoTest : Fragment() {
         //viewModel.setPulsoMinimo(80)
         //viewModel.setCalibrado(true)
 
+        Log.d("Pulso minimo",viewModel.getPulsoMinimo().toString())
+        Log.d("Pulso Maximo",viewModel.getPulsoMaximo().toString())
 
         calibrado = viewModel.getCalibrado();
-
 
         if (calibrado) {
             pulsoMinimo = viewModel.getPulsoMinimo()
@@ -159,7 +172,8 @@ class ModoTest : Fragment() {
 
             //Registrar listener del sensor
             sensorPulso = sensorManager!!.getDefaultSensor(Sensor.TYPE_HEART_RATE)
-            sensorManager.registerListener(listenerPulso, sensorPulso, SensorManager.SENSOR_DELAY_NORMAL)
+            sensorManager.registerListener(listenerPulso, sensorPulso,
+                SensorManager.SENSOR_DELAY_NORMAL)
 
             textoCalibrado.visibility = INVISIBLE
             textoPrincipal.visibility = VISIBLE

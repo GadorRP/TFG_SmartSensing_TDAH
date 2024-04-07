@@ -1,6 +1,7 @@
 package com.example.aplicaciontfg.presentation
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.SensorManager
 import android.os.Bundle
@@ -15,7 +16,6 @@ class MainActivity2 : AppCompatActivity() {
     private var sensorManager: SensorManager? = null
     private val permiso = Manifest.permission.BODY_SENSORS
     private val viewModel : DatosViewModel by viewModels()
-
 
     val requestPermissionLauncher =
         registerForActivityResult(
@@ -41,9 +41,18 @@ class MainActivity2 : AppCompatActivity() {
         }
 
         if (permisosDados){
+            val preferencias = getPreferences(Context.MODE_PRIVATE)
+            val pulsoMinimo = preferencias.getInt("pulsoMinimo", -1)
+            val pulsoMaximo = preferencias.getInt("pulsoMaximo", -1)
+
             sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 
             viewModel.setSenManager(sensorManager!!)
+            viewModel.setPulsoMinimo(pulsoMinimo)
+            viewModel.setPulsoMaximo(pulsoMaximo)
+
+            if (pulsoMinimo != -1 && pulsoMaximo != -1)
+                viewModel.setCalibrado(true)
 
             setContentView(R.layout.activity_main)
         }

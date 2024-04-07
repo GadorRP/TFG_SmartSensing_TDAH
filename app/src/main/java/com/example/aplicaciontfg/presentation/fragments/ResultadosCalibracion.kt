@@ -1,6 +1,7 @@
 package com.example.aplicaciontfg.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,15 @@ class ResultadosCalibracion : Fragment() {
         if (pulsoMinimo != -1 && pulsoMaximo != -1){
 
             if (pulsoMinimo < pulsoMaximo){
+                val preferencias = requireActivity().getPreferences(Context.MODE_PRIVATE)
+                val editor = preferencias.edit()
+
+                //actualizar los datos persistentes
+                editor.putInt("pulsoMinimo", pulsoMinimo)
+                editor.putInt("pulsoMaximo", pulsoMaximo)
+                editor.commit()
+
+                //actualizar viewmodel
                 viewModel.setPulsoMinimo(pulsoMinimo)
                 viewModel.setPulsoMaximo(pulsoMaximo)
                 viewModel.setCalibrado(true)
