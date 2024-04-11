@@ -60,15 +60,16 @@ class MenuPrincipal : Fragment() {
         Log.d("EventoTestForeground" , "hola")
 
         // Iniciar la detención del servicio después de un tiempo determinado
-        val handler = Handler(Looper.getMainLooper())
+        /*val handler = Handler(Looper.getMainLooper())
 
         val runnable = Runnable {
             val stopIntent = Intent(context, BackServiceSensors::class.java)
+            Log.d("Control SERVICIO","Se ha parado el servicio")
             context?.stopService(stopIntent)
         }
 
         // Ajusta el tiempo en segundos (ej.: 10 segundos)
-        handler.postDelayed(runnable, 100 * 1000)
+        handler.postDelayed(runnable, 10 * 1000)*/
 
         return root
     }

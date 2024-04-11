@@ -41,7 +41,7 @@ class MainActivity2 : AppCompatActivity() {
         }
 
         if (permisosDados){
-            val preferencias = getPreferences(Context.MODE_PRIVATE)
+            val preferencias = getSharedPreferences("preferences_datos",Context.MODE_PRIVATE)
             val pulsoMinimo = preferencias.getInt("pulsoMinimo", -1)
             val pulsoMaximo = preferencias.getInt("pulsoMaximo", -1)
 

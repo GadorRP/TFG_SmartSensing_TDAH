@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -43,6 +44,11 @@ class BackServiceSensors : Service(), SensorEventListener {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        val preferencias = applicationContext.getSharedPreferences(
+            "preferences_datos",Context.MODE_PRIVATE)
+        val pulsoMinimo = preferencias.getInt("pulsoMinimo", -1)
+        val pulsoMaximo = preferencias.getInt("pulsoMaximo", -1)
+
         // obtenemos el sensor manager al comenzar el servicio
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 
@@ -59,7 +65,7 @@ class BackServiceSensors : Service(), SensorEventListener {
                     sensor,
                     SensorManager.SENSOR_DELAY_NORMAL
                 )
-            }, 0, 15000, TimeUnit.MILLISECONDS
+            }, 0, 20000, TimeUnit.MILLISECONDS
         )
 
         // creamos el canal para la notificacion
@@ -84,12 +90,14 @@ class BackServiceSensors : Service(), SensorEventListener {
             ultimaLectura = event.values[0]
 
             if (ultimaLectura!! > 70){
-                startActivity(Intent(this, ActivityNotificacion::class.java))
+                var intent = Intent(this, ActivityNotificacion::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
             }
 
             sensorManager?.unregisterListener(this)
         }
-        //Log.d("Eventossssssss" , event.values[0].toString())
+        Log.d("Eventossssssss" , event.values[0].toString())
 
     }
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {

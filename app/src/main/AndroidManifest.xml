@@ -20,7 +20,7 @@
             android:name=".presentation.ActivityNotificacion"
             android:exported="false"
             android:label="@string/title_activity_notificacion"
-            android:theme="@style/Theme.AppCompat.Light" />
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
 
         <service
             android:name=".presentation.service.BackServiceSensors"

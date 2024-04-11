@@ -9,6 +9,7 @@ import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.aplicaciontfg.R
@@ -18,16 +19,19 @@ class ActivityNotificacion : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
     private var keyguardManager: KeyguardManager? = null
-    
-    val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        val vibratorManager: VibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-        vibratorManager.getDefaultVibrator()
-    } else { null }
-
+    private var vibrator: Vibrator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notificacion)
+
+        Log.d("ACTIVIDAD NUEVA" , "CREADO")
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager: VibratorManager =
+                getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibrator = vibratorManager.defaultVibrator
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
@@ -40,7 +44,7 @@ class ActivityNotificacion : AppCompatActivity() {
         // Vibra al iniciar la actividad
         val duracion = 200L
         if (vibrator != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(duracion, VibrationEffect.DEFAULT_AMPLITUDE))
+            vibrator!!.vibrate(VibrationEffect.createOneShot(duracion, VibrationEffect.DEFAULT_AMPLITUDE))
 
         }
 
