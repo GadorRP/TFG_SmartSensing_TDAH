@@ -17,6 +17,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.aplicaciontfg.R
+import com.example.aplicaciontfg.presentation.ActivityNotificacion
 import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.Executors
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit
 
 
 class BackServiceSensors : Service(), SensorEventListener {
-    private val CHANNEL_ID = "ForegroundService Kotlin"
+    private val CHANNEL_ID = "ForegroundService SmartSensing"
     private var sensorManager: SensorManager? = null
     private var ultimaLectura: Float? = null
     private val executorService = Executors.newSingleThreadScheduledExecutor()
@@ -42,15 +43,15 @@ class BackServiceSensors : Service(), SensorEventListener {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        // get sensor manager on starting the service
+        // obtenemos el sensor manager al comenzar el servicio
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 
-        // have a default sensor configured
+        // sensor que queremos monitorizar
         val sensorType = Sensor.TYPE_HEART_RATE
 
         val sensor = sensorManager!!.getDefaultSensor(sensorType)
 
-
+        //programamos las lecturas cada 15 segundos
         executorService.scheduleAtFixedRate(
             {
                 sensorManager!!.registerListener(
@@ -58,20 +59,18 @@ class BackServiceSensors : Service(), SensorEventListener {
                     sensor,
                     SensorManager.SENSOR_DELAY_NORMAL
                 )
-            },
-            0,
-            15000,
-            TimeUnit.MILLISECONDS
+            }, 0, 15000, TimeUnit.MILLISECONDS
         )
 
-        // create notification channel for API 33
+        // creamos el canal para la notificacion
         createNotificationChannel()
 
-        Log.d("BackSensorServie" , "Registrado")
+        Log.d("BackSensorService" , "Registrado")
 
+        //creamos la notificacion y comenzamos el servicio
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Servicio de sensores en segundo plano")
-            .setContentText("Este servicio está recopilando datos de los sensores.")
+            .setContentTitle("Leyendo sensores")
+            .setContentText("SmartSensing esta recabando informacion")
             .setSmallIcon(R.drawable.nervioso)
             .build()
         startForeground(1, notification)
@@ -80,15 +79,15 @@ class BackServiceSensors : Service(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        //Depuracion
         if (event != null && event.values[0] > 0) {
             Log.d("EventoTestForeground" , event.values[0].toString())
             ultimaLectura = event.values[0]
 
+            if (ultimaLectura!! > 70){
+                startActivity(Intent(this, ActivityNotificacion::class.java))
+            }
+
             sensorManager?.unregisterListener(this)
-            //stopSelf()
-            // Stop the service when the data is collected
-            //stopForeground(STOP_FOREGROUND_REMOVE)
         }
         //Log.d("Eventossssssss" , event.values[0].toString())
 
@@ -101,11 +100,11 @@ class BackServiceSensors : Service(), SensorEventListener {
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val serviceChannel = NotificationChannel(CHANNEL_ID, "Foreground Service Channel",
-                NotificationManager.IMPORTANCE_DEFAULT)
-            val manager = getSystemService(NotificationManager::class.java)
-            manager!!.createNotificationChannel(serviceChannel)
-        }
+        val serviceChannel = NotificationChannel(CHANNEL_ID,
+            "Smart Sensing Foreground Service",
+            NotificationManager.IMPORTANCE_DEFAULT)
+        val manager = getSystemService(NotificationManager::class.java)
+        manager!!.createNotificationChannel(serviceChannel)
+
     }
 }

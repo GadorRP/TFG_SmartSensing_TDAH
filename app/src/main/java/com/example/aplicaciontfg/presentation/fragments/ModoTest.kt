@@ -54,14 +54,6 @@ class ModoTest : Fragment() {
                 Log.d("EventoTest" , event.values[0].toString())
             }
 
-            if (event != null && event.values[0] > 70){
-                val powerManager = requireActivity().getSystemService(Context.POWER_SERVICE) as PowerManager
-                val wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "MyWakeLock")
-                wakeLock.acquire()
-                // Enciende la pantalla
-                wakeLock.release()
-            }
-
             if (event != null && obtenerEvSensor && event.values[0] > 0){
                 obtenerEvSensor = false
 

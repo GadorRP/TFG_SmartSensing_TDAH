@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +28,6 @@ import kotlinx.coroutines.launch
 
 
 class MenuPrincipal : Fragment() {
-    //private val ioScope = CoroutineScope(Dispatchers.IO)
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -50,17 +50,7 @@ class MenuPrincipal : Fragment() {
             findNavController().navigate(R.id.action_menuPrincipal_to_modoCalibracion)
         }
 
-        //startServiceAndRepeat()
-
-        // Get scheduler and prepare intent
-        //val scheduler = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        //val intent = Intent(context,BackServiceSensors::class.java)
-        //val scheduledIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-
-        // Start the service
-        //scheduler.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5000, scheduledIntent)
-
-        //CON ESTO FNCIONA
+        //CON ESTO FUNCIONA
         //Log.d("Servicio cada 5 segundos", "Ejecutando tarea")
         val context = requireActivity().applicationContext
         val intent = Intent(context, BackServiceSensors::class.java)
@@ -68,22 +58,20 @@ class MenuPrincipal : Fragment() {
         ContextCompat.startForegroundService(context, intent)
 
         Log.d("EventoTestForeground" , "hola")
+
+        // Iniciar la detención del servicio después de un tiempo determinado
+        val handler = Handler(Looper.getMainLooper())
+
+        val runnable = Runnable {
+            val stopIntent = Intent(context, BackServiceSensors::class.java)
+            context?.stopService(stopIntent)
+        }
+
+        // Ajusta el tiempo en segundos (ej.: 10 segundos)
+        handler.postDelayed(runnable, 100 * 1000)
+
         return root
     }
-    /*private fun startServiceAndRepeat() {
-        ioScope.launch {
-            while (isActive) {
-                // Logic to be executed every 5 seconds
-                Log.d("Servicio cada 5 segundos", "Ejecutando tarea")
-                BackServiceSensors.startService(requireContext(), "Mensaje desde el fragmento")
-                delay(15000L) // Wait for 5 seconds
-            }
-        }
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        ioScope.cancel()
-    }*/
 
 }
