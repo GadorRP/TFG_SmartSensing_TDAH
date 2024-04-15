@@ -50,12 +50,20 @@ class MenuPrincipal : Fragment() {
             findNavController().navigate(R.id.action_menuPrincipal_to_modoCalibracion)
         }
 
+        //Boton para programar
+        val botonProgra = root.findViewById<Button>(R.id.buttonProgramar)
+
+        botonProgra.setOnClickListener {
+            findNavController().navigate(R.id.action_menuPrincipal_to_selectorIntervalo)
+        }
+
         //CON ESTO FUNCIONA
         //Log.d("Servicio cada 5 segundos", "Ejecutando tarea")
         val context = requireActivity().applicationContext
         val intent = Intent(context, BackServiceSensors::class.java)
         intent.putExtra("inputExtra", "Mensaje para el servicio")
-        ContextCompat.startForegroundService(context, intent)
+        //Iniciar el servicio
+        //ContextCompat.startForegroundService(context, intent)
 
         Log.d("EventoTestForeground" , "hola")
 

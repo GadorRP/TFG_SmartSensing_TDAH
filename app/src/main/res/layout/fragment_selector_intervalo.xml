@@ -1,0 +1,68 @@
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#66B1ED"
+    tools:context=".presentation.fragments.MenuPrincipal">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp">
+
+        <com.gildaswise.horizontalcounter.HorizontalCounter
+            android:id="@+id/horizontal_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="-10dp"
+
+            app:textColor="@color/black"
+            app:minusButtonColor="@color/black"
+            app:plusButtonColor="@color/black"
+            app:textSize="16sp"
+
+            app:displayAsInteger="true"
+            app:initialValue="15"
+            app:maxValue="120"
+            app:minValue="1"
+            app:stepValue="1"/>
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
+
+        <Button
+            android:id="@+id/buttonHechoSel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="110dp"
+            android:text="Hecho" />
+
+        <Button
+            android:id="@+id/buttonVolverSel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="150dp"
+            android:text="Volver" />
+
+        <TextView
+            android:id="@+id/textSeleccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:textSize="21sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:text="¿Cuantos minutos \n dura tu tarea?" />
+
+    </FrameLayout>
+
+</androidx.wear.widget.BoxInsetLayout>

@@ -5,6 +5,7 @@ plugins {
     id ("androidx.navigation.safeargs.kotlin")
 }
 
+
 android {
     namespace = "com.example.aplicaciontfg"
     compileSdk = 34
@@ -51,10 +52,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 dependencies {
-    implementation ("androidx.navigation:navigation-compose:2.5.0")
+    implementation("com.github.gildaswise:HorizontalCounter:1.3.0")
+    implementation("androidx.navigation:navigation-compose:2.5.0")
     implementation("androidx.activity:activity-ktx:1.5.0")
     implementation("androidx.navigation:navigation-fragment:2.7.6")
     implementation("androidx.navigation:navigation-ui:2.7.6")

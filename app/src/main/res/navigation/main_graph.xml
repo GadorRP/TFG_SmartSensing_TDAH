@@ -37,6 +37,9 @@
             android:name="pulsoMaximo"
             app:argType="integer"
             android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_menuPrincipal_to_selectorIntervalo"
+            app:destination="@id/selectorIntervalo" />
     </fragment>
     <fragment
         android:id="@+id/modoTest"
@@ -100,5 +103,13 @@
             android:name="pulsoFinal"
             app:argType="integer"
             android:defaultValue="-1" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectorIntervalo"
+        android:name="com.example.aplicaciontfg.presentation.fragments.SelectorIntervalo"
+        android:label="SelectorIntervalo" >
+        <action
+            android:id="@+id/action_selectorIntervalo_to_menuPrincipal"
+            app:destination="@id/menuPrincipal" />
     </fragment>
 </navigation>
