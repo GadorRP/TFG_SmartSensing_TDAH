@@ -1,6 +1,7 @@
 package com.example.aplicaciontfg.presentation.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,15 +11,21 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.core.view.marginTop
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.aplicaciontfg.R
+import com.example.aplicaciontfg.presentation.DatosViewModel
 import com.gildaswise.horizontalcounter.HorizontalCounter
 
 
 class SelectorIntervalo : Fragment() {
     private var minTarea: Double? = null
     private var minDescanso: Double? = null
-    private var repetir = false
+    private var hayDescanso = false
+    private var finalizar = false
+    private var pulsaciones = -1
+    private val viewModel : DatosViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -31,21 +38,63 @@ class SelectorIntervalo : Fragment() {
         val contador = root.findViewById<HorizontalCounter>(R.id.horizontal_counter)
 
         val checkBox = root.findViewById<CheckBox>(R.id.checkBox)
+        val textoCheckBox = root.findViewById<TextView>(R.id.textCheckBox)
 
         val texto = root.findViewById<TextView>(R.id.textSeleccion)
 
-        val botonHecho = root.findViewById<Button>(R.id.buttonHechoSel)
+        val botonSiguiente = root.findViewById<Button>(R.id.buttonHechoSel)
 
-        botonHecho.setOnClickListener {
+        botonSiguiente.setOnClickListener {
             val numeroActual = contador.currentValue
-            if  (minTarea == null) {
+            pulsaciones++
+
+            //primera pulsacion
+            if (pulsaciones == 0){
+                texto.text = "¿Cuantos minutos \n dura tu tarea?"
+                contador.visibility = VISIBLE
+            }
+            //se obtiene el contador
+            else if  (pulsaciones == 1 && minTarea == null) {
                 minTarea = numeroActual
-                texto.text = "¿Cuantos minutos \n dura tu descanso?"
-            }else if (minDescanso == null){
-                minDescanso = numeroActual
+                texto.visibility = INVISIBLE
                 contador.visibility = INVISIBLE
                 checkBox.visibility = VISIBLE
+                textoCheckBox.visibility = VISIBLE
             }
+            //despues de asignar la duracion de la tarea se pregunta si se quiere descanso
+            else if (pulsaciones == 2){
+                hayDescanso = checkBox.isChecked
+
+                if (hayDescanso ){
+                    checkBox.visibility = INVISIBLE
+                    textoCheckBox.visibility = INVISIBLE
+                    texto.text = "¿Cuantos minutos \n dura tu descanso?"
+                    botonSiguiente.text = "finalizar"
+                    texto.visibility = VISIBLE
+                    contador.visibility = VISIBLE
+                }
+                else {
+                    texto.text = "Al dar a finalizar comenzará tu tarea"
+                    texto.visibility = VISIBLE
+                    checkBox.visibility = INVISIBLE
+                    textoCheckBox.visibility = INVISIBLE
+                }
+            }
+            //hay descanso, se obteniene la duracion
+            else if ( pulsaciones == 3 && hayDescanso  && minDescanso == null){
+                texto.text = "Al dar a finalizar comenzará tu tarea"
+                texto.visibility = VISIBLE
+                contador.visibility = INVISIBLE
+                minDescanso = numeroActual
+            }
+            //no hay descanso se pasa al servicio
+            else if (pulsaciones == 3 && !hayDescanso){
+                findNavController().navigate(R.id.action_selectorIntervalo_to_modoServicio)
+            }
+            else if (pulsaciones == 4 && hayDescanso){
+                findNavController().navigate(R.id.action_selectorIntervalo_to_modoServicio)
+            }
+
         }
 
         val botonVolver = root.findViewById<Button>(R.id.buttonVolverSel)
@@ -53,6 +102,7 @@ class SelectorIntervalo : Fragment() {
         botonVolver.setOnClickListener {
             findNavController().navigate(R.id.action_selectorIntervalo_to_menuPrincipal)
         }
+
         return root
     }
 

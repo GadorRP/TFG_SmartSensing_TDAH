@@ -38,8 +38,8 @@
             app:argType="integer"
             android:defaultValue="-1" />
         <action
-            android:id="@+id/action_menuPrincipal_to_selectorIntervalo"
-            app:destination="@id/selectorIntervalo" />
+            android:id="@+id/action_menuPrincipal_to_modoEstudio"
+            app:destination="@id/modoEstudio" />
     </fragment>
     <fragment
         android:id="@+id/modoTest"
@@ -111,5 +111,27 @@
         <action
             android:id="@+id/action_selectorIntervalo_to_menuPrincipal"
             app:destination="@id/menuPrincipal" />
+        <action
+            android:id="@+id/action_selectorIntervalo_to_modoServicio"
+            app:destination="@id/modoServicio" />
     </fragment>
+    <fragment
+        android:id="@+id/modoEstudio"
+        android:name="com.example.aplicaciontfg.presentation.fragments.ModoEstudio"
+        android:label="ModoEstudio" >
+        <action
+            android:id="@+id/action_modoEstudio_to_selectorIntervalo"
+            app:destination="@id/selectorIntervalo" />
+        <action
+            android:id="@+id/action_modoEstudio_to_modoServicio"
+            app:destination="@id/modoServicio" />
+        <action
+            android:id="@+id/action_modoEstudio_to_menuPrincipal"
+            app:destination="@id/menuPrincipal" />
+    </fragment>
+    <fragment
+        android:id="@+id/modoServicio"
+        android:name="com.example.aplicaciontfg.presentation.fragments.ModoServicio"
+        android:label="fragment_modo_servicio"
+        tools:layout="@layout/fragment_modo_servicio" />
 </navigation>

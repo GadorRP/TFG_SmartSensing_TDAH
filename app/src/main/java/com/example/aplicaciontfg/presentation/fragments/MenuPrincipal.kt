@@ -50,11 +50,11 @@ class MenuPrincipal : Fragment() {
             findNavController().navigate(R.id.action_menuPrincipal_to_modoCalibracion)
         }
 
-        //Boton para programar
-        val botonProgra = root.findViewById<Button>(R.id.buttonProgramar)
+        //Boton para estudio
+        val botonEstudio = root.findViewById<Button>(R.id.buttonEstudio)
 
-        botonProgra.setOnClickListener {
-            findNavController().navigate(R.id.action_menuPrincipal_to_selectorIntervalo)
+        botonEstudio.setOnClickListener {
+            findNavController().navigate(R.id.action_menuPrincipal_to_modoEstudio)
         }
 
         //CON ESTO FUNCIONA
@@ -65,7 +65,6 @@ class MenuPrincipal : Fragment() {
         //Iniciar el servicio
         //ContextCompat.startForegroundService(context, intent)
 
-        Log.d("EventoTestForeground" , "hola")
 
         // Iniciar la detención del servicio después de un tiempo determinado
         /*val handler = Handler(Looper.getMainLooper())

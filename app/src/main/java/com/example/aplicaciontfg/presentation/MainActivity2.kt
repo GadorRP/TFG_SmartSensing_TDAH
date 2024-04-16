@@ -14,7 +14,9 @@ import com.example.aplicaciontfg.R
 class MainActivity2 : AppCompatActivity() {
     private var permisosDados = false
     private var sensorManager: SensorManager? = null
-    private val permiso = Manifest.permission.BODY_SENSORS
+    private val permisos = arrayOf(Manifest.permission.BODY_SENSORS,
+        Manifest.permission.WAKE_LOCK, Manifest.permission.VIBRATE,
+        Manifest.permission.FOREGROUND_SERVICE)
     private val viewModel : DatosViewModel by viewModels()
 
     val requestPermissionLauncher =
@@ -35,6 +37,7 @@ class MainActivity2 : AppCompatActivity() {
 
         // Comprobar si tengo ya los permisos
         if (noTengoPermisos()) {
+            for (permiso in permisos)
             requestPermissionLauncher.launch(permiso)
         }else {
             permisosDados = true
@@ -60,8 +63,11 @@ class MainActivity2 : AppCompatActivity() {
     }
 
     private fun noTengoPermisos(): Boolean {
-        return checkSelfPermission(Manifest.permission.BODY_SENSORS) !=
-                PackageManager.PERMISSION_GRANTED
+        for (permiso in permisos){
+            if (checkSelfPermission(permiso) != PackageManager.PERMISSION_GRANTED)
+                return true
+        }
+        return false
     }
 
 }

@@ -79,7 +79,7 @@ class ModoCalibracion : Fragment() {
         pulsoMinimo.observe(viewLifecycleOwner) { nuevoValor ->
             if (nuevoValor != -1) {
                 textTitulo.text = "Vamos a movernos"
-                textsubtitulo.text = "Realiza 5 saltos y pulse Tomar Pulso"
+                textsubtitulo.text = "Realiza 5 saltos y pulsa Tomar Pulso"
             }
         }
 

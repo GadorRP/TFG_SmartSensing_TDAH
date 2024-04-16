@@ -10,39 +10,54 @@
         android:layout_height="match_parent"
         android:padding="5dp">
 
-        <Button
-            android:id="@+id/buttonTest"
-            android:layout_width="wrap_content"
-            android:layout_height="42dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="65dp"
-            android:text="Test" />
-
-        <Button
-            android:id="@+id/buttonCalibrar"
-            android:layout_width="wrap_content"
-            android:layout_height="42dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="105dp"
-            android:text="Calibrar" />
-
-        <Button
-            android:id="@+id/buttonEstudio"
-            android:layout_width="wrap_content"
-            android:layout_height="42dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="145dp"
-            android:text="Programar" />
-
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/subtituloEstudio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="50dp"
+            android:textSize="17sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:text="Puedes estudiar sin tiempo máximo o programar el final y añadir un descanso"
+            />
+
+        <Button
+            android:id="@+id/buttonSinFinal"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="110dp"
+            android:layout_marginLeft="55dp"
+            android:text="Sin final" />
+
+        <Button
+            android:id="@+id/buttonVolverEstudio"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="150dp"
+
+            android:text="Volver" />
+
+        <Button
+            android:id="@+id/buttonProgramar"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="110dp"
+            android:layout_marginLeft="-45dp"
+            android:text="Programado" />
+
+        <TextView
+            android:id="@+id/tituloEstudio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
             android:textSize="25sp"
             android:textColor="@color/black"
-            android:text="SmartSensing" />
+            android:text="Modo Estudio" />
     </FrameLayout>
 
 </androidx.wear.widget.BoxInsetLayout>
