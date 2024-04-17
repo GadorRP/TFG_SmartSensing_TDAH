@@ -20,12 +20,10 @@ import com.gildaswise.horizontalcounter.HorizontalCounter
 
 
 class SelectorIntervalo : Fragment() {
-    private var minTarea: Double? = null
-    private var minDescanso: Double? = null
+    private var minTarea: Int? = null
+    private var minDescanso: Int? = null
     private var hayDescanso = false
-    private var finalizar = false
     private var pulsaciones = -1
-    private val viewModel : DatosViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -55,7 +53,7 @@ class SelectorIntervalo : Fragment() {
             }
             //se obtiene el contador
             else if  (pulsaciones == 1 && minTarea == null) {
-                minTarea = numeroActual
+                minTarea = numeroActual.toInt()
                 texto.visibility = INVISIBLE
                 contador.visibility = INVISIBLE
                 checkBox.visibility = VISIBLE
@@ -85,14 +83,17 @@ class SelectorIntervalo : Fragment() {
                 texto.text = "Al dar a finalizar comenzará tu tarea"
                 texto.visibility = VISIBLE
                 contador.visibility = INVISIBLE
-                minDescanso = numeroActual
+                minDescanso = numeroActual.toInt()
             }
             //no hay descanso se pasa al servicio
             else if (pulsaciones == 3 && !hayDescanso){
-                findNavController().navigate(R.id.action_selectorIntervalo_to_modoServicio)
+                findNavController().navigate(SelectorIntervaloDirections.actionSelectorIntervaloToModoServicio(
+                    minsServicio = minTarea!!))
             }
             else if (pulsaciones == 4 && hayDescanso){
-                findNavController().navigate(R.id.action_selectorIntervalo_to_modoServicio)
+                findNavController().navigate(SelectorIntervaloDirections.actionSelectorIntervaloToModoServicio(
+                    minsServicio = minTarea!!, minsDescanso = minDescanso!!, hayDescanso = true)
+                )
             }
 
         }

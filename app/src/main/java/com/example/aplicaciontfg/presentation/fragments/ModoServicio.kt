@@ -1,33 +1,56 @@
 package com.example.aplicaciontfg.presentation.fragments
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Looper
+import android.os.Handler
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.aplicaciontfg.R
+import com.example.aplicaciontfg.presentation.service.BackServiceSensors
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ModoServicio.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ModoServicio : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var minTarea = -1
+    private var minDescanso = -1
+    private var hayDescanso = false
+    private val context = requireActivity().applicationContext
+    val args : ModoServicioArgs by navArgs()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
+        minTarea = args.minsServicio
+        minDescanso = args.minsDescanso
+        hayDescanso = args.hayDescanso
+
+        //creamos la referencia al servicio
+        val intent = Intent(context, BackServiceSensors::class.java)
+        intent.putExtra("inputExtra", "Mensaje para el servicio")
+
+        if (!hayDescanso){ //comenzamos el servicio con el tiempo elegido
+            //Iniciar el servicio
+            ContextCompat.startForegroundService(context, intent)
+            Log.d("Control Servicio", "Se ha iniciado el servicio")
+
+            // Iniciar la detención del servicio después de un tiempo determinado
+            val handler = Handler(Looper.getMainLooper())
+
+            val runnable = Runnable {
+                finalizarServicio()
+            }
+
+            // Ajusta el tiempo en segundos
+            handler.postDelayed(runnable, (minTarea * 60 * 1000).toLong())
         }
+
     }
 
     override fun onCreateView(
@@ -35,26 +58,30 @@ class ModoServicio : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_modo_servicio, container, false)
+        val root = inflater.inflate(R.layout.fragment_modo_servicio, container, false)
+
+        //Boton para Finalizar el servicio
+        val botonFinalizar = root.findViewById<Button>(R.id.buttonFinalServ)
+
+        botonFinalizar.setOnClickListener {
+            finalizarServicio()
+            findNavController().navigate(R.id.action_modoServicio_to_menuPrincipal)
+        }
+
+        val botonEstado = root.findViewById<Button>(R.id.buttonEstadoSer)
+
+        botonEstado.setOnClickListener {
+
+        }
+
+        return root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ModoServicio.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ModoServicio().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    fun finalizarServicio() {
+        val stopIntent = Intent(context, BackServiceSensors::class.java)
+        Log.d("Control SERVICIO","Se ha parado el servicio")
+        context?.stopService(stopIntent)
     }
+
+
 }

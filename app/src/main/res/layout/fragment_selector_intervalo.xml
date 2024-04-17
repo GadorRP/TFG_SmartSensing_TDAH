@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#66B1ED"
-    tools:context=".presentation.fragments.MenuPrincipal">
+    tools:context=".presentation.fragments.SelectorIntervalo">
 
     <FrameLayout
         android:layout_width="match_parent"

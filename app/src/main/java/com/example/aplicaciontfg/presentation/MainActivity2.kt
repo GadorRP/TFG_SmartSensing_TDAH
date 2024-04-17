@@ -25,9 +25,9 @@ class MainActivity2 : AppCompatActivity() {
         ) { isGranted: Boolean ->
             if (isGranted) {
                 permisosDados = true
-                Log.d("MyActivity", "Permiso BODY_SENSORS concedido")
+                Log.d("MyActivity", "Permisos obtenidos")
             } else {
-                Log.d("MyActivity", "Permiso BODY_SENSORS denegado")
+                Log.d("MyActivity", "Permisos denegado")
 
             }
         }
@@ -38,15 +38,26 @@ class MainActivity2 : AppCompatActivity() {
         // Comprobar si tengo ya los permisos
         if (noTengoPermisos()) {
             for (permiso in permisos)
-            requestPermissionLauncher.launch(permiso)
+                requestPermissionLauncher.launch(permiso)
         }else {
             permisosDados = true
         }
 
         if (permisosDados){
             val preferencias = getSharedPreferences("preferences_datos",Context.MODE_PRIVATE)
+
+            //DEPURACION
+            val editor = preferencias.edit()
+
+            editor.putInt("pulsoMinimo", 60)
+            editor.putInt("pulso maximo", 90)
+            editor.commit()
+
             val pulsoMinimo = preferencias.getInt("pulsoMinimo", -1)
             val pulsoMaximo = preferencias.getInt("pulsoMaximo", -1)
+
+            Log.d("ActividadPREFERENCIAS", "pulsoMinimo: $pulsoMinimo")
+            Log.d("ActividadPREFERENCIAS", "pulsoMaximo: $pulsoMaximo")
 
             sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 

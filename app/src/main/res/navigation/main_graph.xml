@@ -133,5 +133,21 @@
         android:id="@+id/modoServicio"
         android:name="com.example.aplicaciontfg.presentation.fragments.ModoServicio"
         android:label="fragment_modo_servicio"
-        tools:layout="@layout/fragment_modo_servicio" />
+        tools:layout="@layout/fragment_modo_servicio" >
+        <action
+            android:id="@+id/action_modoServicio_to_menuPrincipal"
+            app:destination="@id/menuPrincipal" />
+        <argument
+            android:name="minsServicio"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="hayDescanso"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="minsDescanso"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
 </navigation>

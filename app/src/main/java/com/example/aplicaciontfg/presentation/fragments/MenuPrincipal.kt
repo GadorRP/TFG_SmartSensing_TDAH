@@ -57,26 +57,7 @@ class MenuPrincipal : Fragment() {
             findNavController().navigate(R.id.action_menuPrincipal_to_modoEstudio)
         }
 
-        //CON ESTO FUNCIONA
-        //Log.d("Servicio cada 5 segundos", "Ejecutando tarea")
-        val context = requireActivity().applicationContext
-        val intent = Intent(context, BackServiceSensors::class.java)
-        intent.putExtra("inputExtra", "Mensaje para el servicio")
-        //Iniciar el servicio
-        //ContextCompat.startForegroundService(context, intent)
 
-
-        // Iniciar la detención del servicio después de un tiempo determinado
-        /*val handler = Handler(Looper.getMainLooper())
-
-        val runnable = Runnable {
-            val stopIntent = Intent(context, BackServiceSensors::class.java)
-            Log.d("Control SERVICIO","Se ha parado el servicio")
-            context?.stopService(stopIntent)
-        }
-
-        // Ajusta el tiempo en segundos (ej.: 10 segundos)
-        handler.postDelayed(runnable, 10 * 1000)*/
 
         return root
     }

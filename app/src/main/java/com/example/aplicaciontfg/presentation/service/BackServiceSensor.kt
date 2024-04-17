@@ -49,6 +49,9 @@ class BackServiceSensors : Service(), SensorEventListener {
         val pulsoMinimo = preferencias.getInt("pulsoMinimo", -1)
         val pulsoMaximo = preferencias.getInt("pulsoMaximo", -1)
 
+        Log.d("SharedPreferences", "pulsominimo $pulsoMinimo")
+        Log.d("SharedPreferences", "pulsoMaximo $pulsoMaximo")
+
         // obtenemos el sensor manager al comenzar el servicio
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
 
@@ -57,7 +60,7 @@ class BackServiceSensors : Service(), SensorEventListener {
 
         val sensor = sensorManager!!.getDefaultSensor(sensorType)
 
-        //programamos las lecturas cada 15 segundos
+        //programamos las lecturas cada 20 segundos
         executorService.scheduleAtFixedRate(
             {
                 sensorManager!!.registerListener(
