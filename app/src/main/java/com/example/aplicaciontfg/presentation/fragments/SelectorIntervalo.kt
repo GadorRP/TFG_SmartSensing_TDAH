@@ -67,7 +67,7 @@ class SelectorIntervalo : Fragment() {
                     checkBox.visibility = INVISIBLE
                     textoCheckBox.visibility = INVISIBLE
                     texto.text = "¿Cuantos minutos \n dura tu descanso?"
-                    botonSiguiente.text = "finalizar"
+
                     texto.visibility = VISIBLE
                     contador.visibility = VISIBLE
                 }
@@ -76,12 +76,16 @@ class SelectorIntervalo : Fragment() {
                     texto.visibility = VISIBLE
                     checkBox.visibility = INVISIBLE
                     textoCheckBox.visibility = INVISIBLE
+                    botonSiguiente.text = "finalizar"
                 }
+
+
             }
             //hay descanso, se obteniene la duracion
             else if ( pulsaciones == 3 && hayDescanso  && minDescanso == null){
                 texto.text = "Al dar a finalizar comenzará tu tarea"
                 texto.visibility = VISIBLE
+                botonSiguiente.text = "finalizar"
                 contador.visibility = INVISIBLE
                 minDescanso = numeroActual.toInt()
             }

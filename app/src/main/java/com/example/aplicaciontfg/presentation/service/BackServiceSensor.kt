@@ -29,12 +29,15 @@ class BackServiceSensors : Service(), SensorEventListener {
     private val CHANNEL_ID = "ForegroundService SmartSensing"
     private var sensorManager: SensorManager? = null
     private var ultimaLectura: Float? = null
+    private var hayDescanso = false
+    private var minDescanso = -1
     private val executorService = Executors.newSingleThreadScheduledExecutor()
 
     companion object {
-        fun startService(context: Context, message: String) {
+        fun startService(context: Context, descanso: Boolean, minDescanso : Int) {
             val startIntent = Intent(context, BackServiceSensors::class.java)
-            startIntent.putExtra("inputExtra", message)
+            startIntent.putExtra("infoDescanso", descanso)
+            startIntent.putExtra("minDescanso", minDescanso)
             ContextCompat.startForegroundService(context, startIntent)
         }
         fun stopService(context: Context) {
@@ -48,6 +51,9 @@ class BackServiceSensors : Service(), SensorEventListener {
             "preferences_datos",Context.MODE_PRIVATE)
         val pulsoMinimo = preferencias.getInt("pulsoMinimo", -1)
         val pulsoMaximo = preferencias.getInt("pulsoMaximo", -1)
+
+        hayDescanso = intent.getBooleanExtra("infoDescanso", false)
+        minDescanso = intent.getIntExtra("minDescanso", -1)
 
         Log.d("SharedPreferences", "pulsominimo $pulsoMinimo")
         Log.d("SharedPreferences", "pulsoMaximo $pulsoMaximo")
@@ -68,7 +74,7 @@ class BackServiceSensors : Service(), SensorEventListener {
                     sensor,
                     SensorManager.SENSOR_DELAY_NORMAL
                 )
-            }, 0, 20000, TimeUnit.MILLISECONDS
+            }, 0, 30 * 1000, TimeUnit.MILLISECONDS
         )
 
         // creamos el canal para la notificacion
@@ -92,7 +98,7 @@ class BackServiceSensors : Service(), SensorEventListener {
             Log.d("EventoTestForeground" , event.values[0].toString())
             ultimaLectura = event.values[0]
 
-            if (ultimaLectura!! > 70){
+            if (ultimaLectura!! > 100){
                 var intent = Intent(this, ActivityNotificacion::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
@@ -100,7 +106,7 @@ class BackServiceSensors : Service(), SensorEventListener {
 
             sensorManager?.unregisterListener(this)
         }
-        Log.d("Eventossssssss" , event.values[0].toString())
+        //Log.d("Eventossssssss" , event.values[0].toString())
 
     }
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
@@ -117,5 +123,19 @@ class BackServiceSensors : Service(), SensorEventListener {
         val manager = getSystemService(NotificationManager::class.java)
         manager!!.createNotificationChannel(serviceChannel)
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        executorService.shutdown()
+        sensorManager?.unregisterListener(this)
+        var intent = Intent(this, ActivityNotificacion::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        intent.putExtra("hayDescanso", hayDescanso)
+        if (hayDescanso)
+            intent.putExtra("minDescanso", minDescanso)
+        startActivity(intent)
+        Log.d("Servicio", "Servicio acabado")
     }
 }

@@ -2,6 +2,7 @@ package com.example.aplicaciontfg.presentation.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Looper
 import android.os.Handler
 import android.util.Log
@@ -14,13 +15,14 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.aplicaciontfg.R
+import com.example.aplicaciontfg.presentation.ActivityNotificacion
 import com.example.aplicaciontfg.presentation.service.BackServiceSensors
 
 class ModoServicio : Fragment() {
     private var minTarea = -1
     private var minDescanso = -1
     private var hayDescanso = false
-    private val context = requireActivity().applicationContext
+    private var sinFin = false
     val args : ModoServicioArgs by navArgs()
 
 
@@ -31,25 +33,8 @@ class ModoServicio : Fragment() {
         minDescanso = args.minsDescanso
         hayDescanso = args.hayDescanso
 
-        //creamos la referencia al servicio
-        val intent = Intent(context, BackServiceSensors::class.java)
-        intent.putExtra("inputExtra", "Mensaje para el servicio")
-
-        if (!hayDescanso){ //comenzamos el servicio con el tiempo elegido
-            //Iniciar el servicio
-            ContextCompat.startForegroundService(context, intent)
-            Log.d("Control Servicio", "Se ha iniciado el servicio")
-
-            // Iniciar la detención del servicio después de un tiempo determinado
-            val handler = Handler(Looper.getMainLooper())
-
-            val runnable = Runnable {
-                finalizarServicio()
-            }
-
-            // Ajusta el tiempo en segundos
-            handler.postDelayed(runnable, (minTarea * 60 * 1000).toLong())
-        }
+        if (minTarea == -1)
+            sinFin = true
 
     }
 
@@ -64,7 +49,7 @@ class ModoServicio : Fragment() {
         val botonFinalizar = root.findViewById<Button>(R.id.buttonFinalServ)
 
         botonFinalizar.setOnClickListener {
-            finalizarServicio()
+            BackServiceSensors.stopService(requireActivity().applicationContext)
             findNavController().navigate(R.id.action_modoServicio_to_menuPrincipal)
         }
 
@@ -74,14 +59,102 @@ class ModoServicio : Fragment() {
 
         }
 
+        lanzaServicio()
+
+
         return root
     }
 
-    fun finalizarServicio() {
-        val stopIntent = Intent(context, BackServiceSensors::class.java)
-        Log.d("Control SERVICIO","Se ha parado el servicio")
-        context?.stopService(stopIntent)
+    private fun lanzaServicio(){
+
+        //creamos la referencia al servicio
+        val context = requireActivity().applicationContext
+        var mensaje = "predefinido"
+
+
+        BackServiceSensors.startService(context, hayDescanso, minDescanso)
+
+        if (!sinFin && !hayDescanso){
+            // Creamos la detencion del servicio
+            val handler = Handler(Looper.getMainLooper())
+
+            val runnable = Runnable {
+                BackServiceSensors.stopService(context)
+            }
+
+            // Ajusta el tiempo en segundos
+            handler.postDelayed(runnable, minTarea.toLong() * 60 * 1000)
+
+        }else if (hayDescanso){
+            val mitad = minTarea / 2f
+
+            // Creamos la detencion del servicio
+            val handler = Handler(Looper.getMainLooper())
+
+            val runnableSegundo = Runnable {
+                BackServiceSensors.startService(context,descanso = false, minDescanso)
+                Log.d("Servicio con Descanso", "Comenzado segundo servicio")
+
+                // Empezamos una cuenta atras para acabar el servicio
+                val durationServicio = mitad * 60 * 1000
+                val countDownTimer = object : CountDownTimer(durationServicio.toLong(), 10000) {
+                    override fun onTick(milisHastaTerminar: Long) {
+                    }
+
+                    override fun onFinish() {
+                        // termina el servicio
+                        BackServiceSensors.stopService(context)
+
+                        //crea la actividad de notificacion
+                        var intent = Intent(context, ActivityNotificacion::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        intent.putExtra("servicioTerminado", true)
+                        startActivity(intent)
+                        findNavController().navigate(R.id.action_modoServicio_to_menuPrincipal)
+                        Log.d("Servicio", "Servicio acabado")
+                        Log.d("Servicio con Descanso", "Parado segundo servicio")
+                    }
+                }
+                countDownTimer.start()
+            }
+
+            val runnablePrimero = Runnable {
+                Log.d("Servicio con Descanso", "Parado primer servicio")
+                BackServiceSensors.stopService(context)
+                handler.postDelayed(runnableSegundo, minDescanso.toLong() * 60 * 1000)
+            }
+
+            // Ajusta el tiempo en segundos
+            handler.postDelayed(runnablePrimero, mitad.toLong() * 60 * 1000)
+        }
+
     }
+
+    /*
+        //creamos la referencia al servicio
+        val context = requireActivity().applicationContext
+
+        val intent = Intent(context, BackServiceSensors::class.java)
+        intent.putExtra("inputExtra", "Mensaje para el servicio")
+
+        //Iniciamos
+        ContextCompat.startForegroundService(context, intent)
+        Log.d("Control Servicio", "Se ha iniciado el servicio")
+
+        if (!sinFin){
+            // Creamos la detencion del servicio
+            val handler = Handler(Looper.getMainLooper())
+
+            val runnable = Runnable {
+                val stopIntent = Intent(context, BackServiceSensors::class.java)
+                Log.d("Control SERVICIO","Se ha parado el servicio")
+                context?.stopService(stopIntent)
+            }
+
+            // Ajusta el tiempo en segundos
+            handler.postDelayed(runnable, duracion.toLong() * 60 * 1000)
+            }
+        */
 
 
 }
