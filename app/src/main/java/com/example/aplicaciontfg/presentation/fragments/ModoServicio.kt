@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
+import androidx.core.os.postDelayed
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.aplicaciontfg.R
@@ -69,8 +70,6 @@ class ModoServicio : Fragment() {
 
         //creamos la referencia al servicio
         val context = requireActivity().applicationContext
-        var mensaje = "predefinido"
-
 
         BackServiceSensors.startService(context, hayDescanso, minDescanso)
 
@@ -110,8 +109,11 @@ class ModoServicio : Fragment() {
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         intent.putExtra("servicioTerminado", true)
                         startActivity(intent)
-                        findNavController().navigate(R.id.action_modoServicio_to_menuPrincipal)
-                        Log.d("Servicio", "Servicio acabado")
+
+                        handler.postDelayed({
+                            findNavController().navigate(R.id.action_modoServicio_to_menuPrincipal)
+                        },10 * 1000 + 300)
+
                         Log.d("Servicio con Descanso", "Parado segundo servicio")
                     }
                 }
@@ -122,6 +124,7 @@ class ModoServicio : Fragment() {
                 Log.d("Servicio con Descanso", "Parado primer servicio")
                 BackServiceSensors.stopService(context)
                 handler.postDelayed(runnableSegundo, minDescanso.toLong() * 60 * 1000)
+                minDescanso = 0
             }
 
             // Ajusta el tiempo en segundos

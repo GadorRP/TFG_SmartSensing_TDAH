@@ -13,6 +13,8 @@ import android.util.Log
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.aplicaciontfg.R
 
 
@@ -37,18 +39,17 @@ class ActivityNotificacion : AppCompatActivity() {
         minDescanso = intent.getIntExtra("minDescanso", -1)
         servicioTerminado = intent.getBooleanExtra("servicioTerminado", false)
 
+
+        setShowWhenLocked(true)
+        setTurnScreenOn(true)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+        keyguardManager!!.requestDismissKeyguard(this, null)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val vibratorManager: VibratorManager =
                 getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
             vibrator = vibratorManager.defaultVibrator
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            setShowWhenLocked(true)
-            setTurnScreenOn(true)
-            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-            keyguardManager!!.requestDismissKeyguard(this, null)
         }
 
         // Vibra al iniciar la actividad
@@ -79,19 +80,20 @@ class ActivityNotificacion : AppCompatActivity() {
         }
 
         if (servicioTerminado){
+            Log.d("Notificacion", "Notificacion servicio")
             titulo.text = "Terminaste el tiempo de la tarea"
-            subtitulo.text = "Ahora volverás al menú"
+            subtitulo.text = "Ahora volverás al menú principal"
         }
 
         // Inicia el temporizador para autodestruir la actividad
         handler.postDelayed({
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            if (hayDescanso || servicioTerminado) {
                 vibrator!!.vibrate(VibrationEffect.createOneShot(duracion, VibrationEffect.DEFAULT_AMPLITUDE))
+            }
+            setShowWhenLocked(false)
+            setTurnScreenOn(false)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-                setShowWhenLocked(false)
-                setTurnScreenOn(false)
-                window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                }
             // Finaliza la actividad
             finish()
         }, duracionActividad.toLong()) // 10 segundos

@@ -74,7 +74,7 @@ class BackServiceSensors : Service(), SensorEventListener {
                     sensor,
                     SensorManager.SENSOR_DELAY_NORMAL
                 )
-            }, 0, 30 * 1000, TimeUnit.MILLISECONDS
+            }, 0, 35 * 1000, TimeUnit.MILLISECONDS
         )
 
         // creamos el canal para la notificacion
@@ -129,13 +129,16 @@ class BackServiceSensors : Service(), SensorEventListener {
         super.onDestroy()
         executorService.shutdown()
         sensorManager?.unregisterListener(this)
-        var intent = Intent(this, ActivityNotificacion::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        intent.putExtra("hayDescanso", hayDescanso)
-        if (hayDescanso)
+        if (hayDescanso && minDescanso != 0){
+            var intent = Intent(this, ActivityNotificacion::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+            intent.putExtra("hayDescanso", hayDescanso)
             intent.putExtra("minDescanso", minDescanso)
-        startActivity(intent)
+            startActivity(intent)
+        }
+
         Log.d("Servicio", "Servicio acabado")
     }
 }
