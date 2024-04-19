@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_menuPrincipal_to_modoEstudio"
             app:destination="@id/modoEstudio" />
+        <action
+            android:id="@+id/action_menuPrincipal_to_verEstado"
+            app:destination="@id/verEstado" />
     </fragment>
     <fragment
         android:id="@+id/modoTest"
@@ -149,5 +152,24 @@
             android:name="minsDescanso"
             app:argType="integer"
             android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_modoServicio_to_verEstado"
+            app:destination="@id/verEstado" />
+    </fragment>
+    <fragment
+        android:id="@+id/verEstado"
+        android:name="com.example.aplicaciontfg.presentation.fragments.VerEstado"
+        android:label="fragment_ver_estado"
+        tools:layout="@layout/fragment_ver_estado" >
+        <argument
+            android:name="MenuPrincipal"
+            app:argType="boolean"
+            android:defaultValue="true" />
+        <action
+            android:id="@+id/action_verEstado_to_modoServicio"
+            app:destination="@id/modoServicio" />
+        <action
+            android:id="@+id/action_verEstado_to_menuPrincipal"
+            app:destination="@id/menuPrincipal" />
     </fragment>
 </navigation>

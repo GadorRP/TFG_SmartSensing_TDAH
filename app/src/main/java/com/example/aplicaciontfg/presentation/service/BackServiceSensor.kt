@@ -1,6 +1,5 @@
 package com.example.aplicaciontfg.presentation.service
 
-import android.app.ForegroundServiceTypeException
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
@@ -11,16 +10,13 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Build
 import android.os.IBinder
-import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.aplicaciontfg.R
 import com.example.aplicaciontfg.presentation.ActivityNotificacion
-import java.util.Timer
-import java.util.TimerTask
+import com.example.aplicaciontfg.presentation.Estado
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -31,6 +27,14 @@ class BackServiceSensors : Service(), SensorEventListener {
     private var ultimaLectura: Float? = null
     private var hayDescanso = false
     private var minDescanso = -1
+
+    private var pulsoMinimo = -1
+    private var pulsoMaximo = -1
+    private var rangoAbsoluto = -1
+    private var rangoIntervalo = -1
+    private var estadoActualInt = -1
+    private var estadoActual = Estado.DESCONOCIDO
+
     private val executorService = Executors.newSingleThreadScheduledExecutor()
 
     companion object {
@@ -49,8 +53,11 @@ class BackServiceSensors : Service(), SensorEventListener {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val preferencias = applicationContext.getSharedPreferences(
             "preferences_datos",Context.MODE_PRIVATE)
-        val pulsoMinimo = preferencias.getInt("pulsoMinimo", -1)
-        val pulsoMaximo = preferencias.getInt("pulsoMaximo", -1)
+
+        pulsoMinimo = preferencias.getInt("pulsoMinimo", -1)
+        pulsoMaximo = preferencias.getInt("pulsoMaximo", -1)
+
+        calibrarMedicion()
 
         hayDescanso = intent.getBooleanExtra("infoDescanso", false)
         minDescanso = intent.getIntExtra("minDescanso", -1)
@@ -94,13 +101,15 @@ class BackServiceSensors : Service(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        if (event != null && event.values[0] > 0) {
+        if (event.values[0] > 0) {
             Log.d("EventoTestForeground" , event.values[0].toString())
             ultimaLectura = event.values[0]
 
-            if (ultimaLectura!! > 100){
-                var intent = Intent(this, ActivityNotificacion::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            obtenerEstado()
+
+            if (estadoActual == Estado.EXCITADO || estadoActual == Estado.MUY_EXCITADO){
+                val intent = Intent(this, ActivityNotificacion::class.java)
+                intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
             }
 
@@ -131,8 +140,8 @@ class BackServiceSensors : Service(), SensorEventListener {
         sensorManager?.unregisterListener(this)
 
         if (hayDescanso && minDescanso != 0){
-            var intent = Intent(this, ActivityNotificacion::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            val intent = Intent(this, ActivityNotificacion::class.java)
+            intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
 
             intent.putExtra("hayDescanso", hayDescanso)
             intent.putExtra("minDescanso", minDescanso)
@@ -140,5 +149,60 @@ class BackServiceSensors : Service(), SensorEventListener {
         }
 
         Log.d("Servicio", "Servicio acabado")
+    }
+
+    private fun obtenerEstado() {
+        var estado = 0
+        var asignado = false
+
+        for (i in pulsoMinimo..pulsoMaximo step rangoIntervalo){
+            if (!asignado) {
+                if (ultimaLectura!! >= i && ultimaLectura!! < i + rangoIntervalo ) { //si esta en el intervalo
+                    if (estadoActualInt == -1) {
+                        estadoActualInt = estado
+                        asignado = true
+                    }
+                }else if (ultimaLectura!! <= pulsoMinimo){
+                    if (estadoActualInt == -1){
+                        estadoActualInt = 0
+                        asignado = true
+                    }
+                }else if (ultimaLectura!! >= pulsoMaximo){
+                    if (estadoActualInt == -1){
+                        estadoActualInt = 4
+                        asignado = true
+                    }
+                }
+                else{
+                    estado++
+                }
+            }
+        }
+
+        when (estadoActualInt) {
+            0 -> estadoActual = Estado.MUY_RELAJADO
+            1 -> estadoActual = Estado.RELAJADO
+            2 -> estadoActual = Estado.NORMAL
+            3 -> estadoActual = Estado.EXCITADO
+            4 -> estadoActual = Estado.MUY_EXCITADO
+            //dependiendo del intervalo (por la aproximacion) puede haber algún valor no obtenido en el 4
+            5 -> estadoActual = Estado.MUY_EXCITADO
+            else -> estadoActual  = Estado.DESCONOCIDO
+        }
+    }
+
+    private fun calibrarMedicion(){
+        rangoAbsoluto = pulsoMaximo - pulsoMinimo
+        rangoIntervalo = rangoAbsoluto / 5
+
+        val resto = rangoAbsoluto  % 5
+
+        //comprobaciones
+        if (resto > 2.5){
+            rangoIntervalo += 1
+        }
+        else if (rangoIntervalo == 0){
+            rangoIntervalo = 1
+        }
     }
 }

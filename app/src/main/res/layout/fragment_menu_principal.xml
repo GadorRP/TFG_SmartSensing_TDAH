@@ -16,7 +16,7 @@
             android:layout_height="42dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="65dp"
-            android:text="Test" />
+            android:text="Estado" />
 
         <Button
             android:id="@+id/buttonCalibrar"

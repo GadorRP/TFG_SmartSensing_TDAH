@@ -50,8 +50,10 @@ class MainActivity2 : AppCompatActivity() {
             val editor = preferencias.edit()
 
             editor.putInt("pulsoMinimo", 60)
-            editor.putInt("pulso maximo", 90)
+            editor.putInt("pulsoMaximo", 100)
             editor.commit()
+
+            //FINAL DEPURACION
 
             val pulsoMinimo = preferencias.getInt("pulsoMinimo", -1)
             val pulsoMaximo = preferencias.getInt("pulsoMaximo", -1)

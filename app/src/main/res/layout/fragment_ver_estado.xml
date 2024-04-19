@@ -1,0 +1,38 @@
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#66B1ED"
+    tools:context=".presentation.fragments.VerEstado">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/textEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="110dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
+            android:textSize="21sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:text="Se está obteniendo tu estado"
+            />
+
+
+        <Button
+            android:id="@+id/buttonVolverEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="135dp"
+            android:text="Volver" />
+
+
+    </FrameLayout>
+
+</androidx.wear.widget.BoxInsetLayout>

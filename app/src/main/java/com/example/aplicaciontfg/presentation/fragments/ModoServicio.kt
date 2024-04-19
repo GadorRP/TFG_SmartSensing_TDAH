@@ -1,6 +1,9 @@
 package com.example.aplicaciontfg.presentation.fragments
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Looper
@@ -11,12 +14,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
+import androidx.core.content.ContextCompat.registerReceiver
 import androidx.core.os.postDelayed
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.aplicaciontfg.R
 import com.example.aplicaciontfg.presentation.ActivityNotificacion
+import com.example.aplicaciontfg.presentation.Estado
 import com.example.aplicaciontfg.presentation.service.BackServiceSensors
 
 class ModoServicio : Fragment() {
@@ -24,6 +31,8 @@ class ModoServicio : Fragment() {
     private var minDescanso = -1
     private var hayDescanso = false
     private var sinFin = false
+    private var broadcastRegistrado : Intent ? = null
+    var ultimoEstado = Estado.DESCONOCIDO.toString()
     val args : ModoServicioArgs by navArgs()
 
 
@@ -57,7 +66,7 @@ class ModoServicio : Fragment() {
         val botonEstado = root.findViewById<Button>(R.id.buttonEstadoSer)
 
         botonEstado.setOnClickListener {
-
+            findNavController().navigate(R.id.action_modoServicio_to_verEstado)
         }
 
         lanzaServicio()
@@ -65,6 +74,7 @@ class ModoServicio : Fragment() {
 
         return root
     }
+
 
     private fun lanzaServicio(){
 
@@ -132,32 +142,5 @@ class ModoServicio : Fragment() {
         }
 
     }
-
-    /*
-        //creamos la referencia al servicio
-        val context = requireActivity().applicationContext
-
-        val intent = Intent(context, BackServiceSensors::class.java)
-        intent.putExtra("inputExtra", "Mensaje para el servicio")
-
-        //Iniciamos
-        ContextCompat.startForegroundService(context, intent)
-        Log.d("Control Servicio", "Se ha iniciado el servicio")
-
-        if (!sinFin){
-            // Creamos la detencion del servicio
-            val handler = Handler(Looper.getMainLooper())
-
-            val runnable = Runnable {
-                val stopIntent = Intent(context, BackServiceSensors::class.java)
-                Log.d("Control SERVICIO","Se ha parado el servicio")
-                context?.stopService(stopIntent)
-            }
-
-            // Ajusta el tiempo en segundos
-            handler.postDelayed(runnable, duracion.toLong() * 60 * 1000)
-            }
-        */
-
 
 }

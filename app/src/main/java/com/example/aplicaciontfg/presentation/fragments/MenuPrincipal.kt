@@ -24,7 +24,7 @@ class MenuPrincipal : Fragment() {
         val botonTest = root.findViewById<Button>(R.id.buttonTest)
 
         botonTest.setOnClickListener {
-            findNavController().navigate(R.id.action_menuPrincipal_to_modoTest)
+            findNavController().navigate(R.id.action_menuPrincipal_to_verEstado)
         }
 
         //Boton para calibrar
