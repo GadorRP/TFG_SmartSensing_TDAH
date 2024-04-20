@@ -10,6 +10,8 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
@@ -73,9 +75,12 @@ class VerEstado : Fragment() {
 
         val texto = root.findViewById<TextView>(R.id.textEstado)
 
+        val subTexto = root.findViewById<TextView>(R.id.subtextEstado)
+
         val boton = root.findViewById<Button>(R.id.buttonVolverEstado)
 
         boton.setOnClickListener {
+            stopListening()
             if (vengoMenu)
                 findNavController().navigate(R.id.action_verEstado_to_menuPrincipal)
             else
@@ -102,8 +107,38 @@ class VerEstado : Fragment() {
                 }, 0, 30 * 1000, TimeUnit.MILLISECONDS
             )
 
+            if (estadoActual.value == Estado.DESCONOCIDO) {
+                texto.text = "Estamos obteniendo tu estado. Espera unos segundos"
+            }
+
             estadoActual.observe(viewLifecycleOwner) {nuevoEstado ->
-                texto.text = "Tu estado actual es ${nuevoEstado.toString().lowercase()} "
+
+                if (nuevoEstado == Estado.EXCITADO || nuevoEstado == Estado.MUY_EXCITADO || nuevoEstado == Estado.MUY_RELAJADO){
+                    var estadoString = ""
+
+                    if (nuevoEstado == Estado.MUY_EXCITADO)
+                        estadoString = "muy nervioso"
+                    else if (nuevoEstado == Estado.EXCITADO)
+                        estadoString = "nervioso"
+                    else
+                        estadoString = "muy relajado"
+
+                    texto.text = "Tu estado actual es $estadoString "
+                }
+                else
+                    texto.text = "Tu estado actual es ${nuevoEstado.toString().lowercase()} "
+
+                if (nuevoEstado == Estado.EXCITADO ||nuevoEstado == Estado.MUY_EXCITADO){
+                    subTexto.text = "Intenta relajarte antes de estar con la tarea"
+                }else {
+                    subTexto.text = "Es un buen estado para realizar las tareas"
+                }
+
+                if (nuevoEstado == Estado.DESCONOCIDO) {
+                    texto.text = "Estamos obteniendo tu estado. Espera unos segundos"
+                    subTexto.visibility = INVISIBLE
+                }else
+                    subTexto.visibility = VISIBLE
             }
         }
         else {
@@ -172,5 +207,10 @@ class VerEstado : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         sensorManager.unregisterListener(listenerPulso, sensor)
+    }
+
+    private fun stopListening() {
+        if (sensor != null)
+            sensorManager.unregisterListener(listenerPulso, sensor)
     }
 }

@@ -6,25 +6,24 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Looper
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.activity.ComponentActivity
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
-import androidx.core.content.ContextCompat.registerReceiver
-import androidx.core.os.postDelayed
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.aplicaciontfg.R
 import com.example.aplicaciontfg.presentation.ActivityNotificacion
+import com.example.aplicaciontfg.presentation.DatosViewModel
 import com.example.aplicaciontfg.presentation.Estado
 import com.example.aplicaciontfg.presentation.service.BackServiceSensors
+
 
 class ModoServicio : Fragment() {
     private var minTarea = -1
@@ -32,20 +31,28 @@ class ModoServicio : Fragment() {
     private var hayDescanso = false
     private var sinFin = false
     private var broadcastRegistrado : Intent ? = null
-    var ultimoEstado = Estado.DESCONOCIDO.toString()
-    val args : ModoServicioArgs by navArgs()
-
+    private var ultimoEstado = Estado.DESCONOCIDO.toString()
+    private val args : ModoServicioArgs by navArgs()
+    private val viewModel : DatosViewModel by activityViewModels()
+    private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            ultimoEstado = intent.getStringExtra("Estado").toString()
+            Log.d("ModoServicio", "Recibido estado")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var servicioIniciado = viewModel.getReferenciaServicio()
 
-        minTarea = args.minsServicio
-        minDescanso = args.minsDescanso
-        hayDescanso = args.hayDescanso
+        if (servicioIniciado == null){
+            minTarea = args.minsServicio
+            minDescanso = args.minsDescanso
+            hayDescanso = args.hayDescanso
 
-        if (minTarea == -1)
-            sinFin = true
-
+            if (minTarea == -1)
+                sinFin = true
+        }
     }
 
     override fun onCreateView(
@@ -63,13 +70,16 @@ class ModoServicio : Fragment() {
             findNavController().navigate(R.id.action_modoServicio_to_menuPrincipal)
         }
 
+        val subtexto = root.findViewById<TextView>(R.id.subtextServicio)
+
         val botonEstado = root.findViewById<Button>(R.id.buttonEstadoSer)
 
         botonEstado.setOnClickListener {
-            findNavController().navigate(R.id.action_modoServicio_to_verEstado)
+            subtexto.text = "Tu estado es $ultimoEstado"
         }
 
-        lanzaServicio()
+        if (viewModel.getReferenciaServicio() == null)
+            lanzaServicio()
 
 
         return root
@@ -81,7 +91,8 @@ class ModoServicio : Fragment() {
         //creamos la referencia al servicio
         val context = requireActivity().applicationContext
 
-        BackServiceSensors.startService(context, hayDescanso, minDescanso)
+        var referenciaServicio = BackServiceSensors.startService(context, hayDescanso, minDescanso)
+        viewModel.setReferenciaServicio(referenciaServicio)
 
         if (!sinFin && !hayDescanso){
             // Creamos la detencion del servicio
@@ -89,6 +100,7 @@ class ModoServicio : Fragment() {
 
             val runnable = Runnable {
                 BackServiceSensors.stopService(context)
+                viewModel.setReferenciaServicio(null)
             }
 
             // Ajusta el tiempo en segundos
@@ -101,7 +113,9 @@ class ModoServicio : Fragment() {
             val handler = Handler(Looper.getMainLooper())
 
             val runnableSegundo = Runnable {
-                BackServiceSensors.startService(context,descanso = false, minDescanso)
+                var referenciaServicio2 = BackServiceSensors.startService(context,descanso = false, minDescanso)
+                viewModel.setReferenciaServicio(referenciaServicio2)
+
                 Log.d("Servicio con Descanso", "Comenzado segundo servicio")
 
                 // Empezamos una cuenta atras para acabar el servicio
@@ -113,6 +127,7 @@ class ModoServicio : Fragment() {
                     override fun onFinish() {
                         // termina el servicio
                         BackServiceSensors.stopService(context)
+                        viewModel.setReferenciaServicio(null)
 
                         //crea la actividad de notificacion
                         var intent = Intent(context, ActivityNotificacion::class.java)
@@ -133,6 +148,7 @@ class ModoServicio : Fragment() {
             val runnablePrimero = Runnable {
                 Log.d("Servicio con Descanso", "Parado primer servicio")
                 BackServiceSensors.stopService(context)
+                viewModel.setReferenciaServicio(null)
                 handler.postDelayed(runnableSegundo, minDescanso.toLong() * 60 * 1000)
                 minDescanso = 0
             }
@@ -141,6 +157,16 @@ class ModoServicio : Fragment() {
             handler.postDelayed(runnablePrimero, mitad.toLong() * 60 * 1000)
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().registerReceiver(receiver, IntentFilter("MensajeServicio"))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        getActivity()?.unregisterReceiver(receiver);
     }
 
 }

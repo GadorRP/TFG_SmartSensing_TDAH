@@ -15,15 +15,15 @@
             android:layout_width="wrap_content"
             android:layout_height="42dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="65dp"
-            android:text="Estado" />
+            android:layout_marginTop="105dp"
+            android:text="Ver Estado" />
 
         <Button
             android:id="@+id/buttonCalibrar"
             android:layout_width="wrap_content"
             android:layout_height="42dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="105dp"
+            android:layout_marginTop="145dp"
             android:text="Calibrar" />
 
         <Button
@@ -31,8 +31,8 @@
             android:layout_width="wrap_content"
             android:layout_height="42dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="145dp"
-            android:text="Programar" />
+            android:layout_marginTop="65dp"
+            android:text="Realizar tarea" />
 
         <TextView
             android:id="@+id/textView"

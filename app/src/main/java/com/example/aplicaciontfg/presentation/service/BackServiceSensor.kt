@@ -134,6 +134,7 @@ class BackServiceSensors : Service(), SensorEventListener {
 
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         executorService.shutdown()
@@ -157,7 +158,7 @@ class BackServiceSensors : Service(), SensorEventListener {
 
         for (i in pulsoMinimo..pulsoMaximo step rangoIntervalo){
             if (!asignado) {
-                if (ultimaLectura!! >= i && ultimaLectura!! < i + rangoIntervalo ) { //si esta en el intervalo
+                if (ultimaLectura!! >= i && ultimaLectura!! < (i + rangoIntervalo) ) { //si esta en el intervalo
                     if (estadoActualInt == -1) {
                         estadoActualInt = estado
                         asignado = true
@@ -189,6 +190,10 @@ class BackServiceSensors : Service(), SensorEventListener {
             5 -> estadoActual = Estado.MUY_EXCITADO
             else -> estadoActual  = Estado.DESCONOCIDO
         }
+
+        val intent = Intent("MensajeServicio") //FILTER is a string to identify this intent
+        intent.putExtra("Estado", estadoActual.toString().lowercase())
+        sendBroadcast(intent)
     }
 
     private fun calibrarMedicion(){
@@ -205,4 +210,5 @@ class BackServiceSensors : Service(), SensorEventListener {
             rangoIntervalo = 1
         }
     }
+
 }

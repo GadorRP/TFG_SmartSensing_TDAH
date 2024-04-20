@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.aplicaciontfg.R
+import com.example.aplicaciontfg.presentation.service.BackServiceSensors
 
 class MainActivity2 : AppCompatActivity() {
     private var permisosDados = false
@@ -49,9 +50,9 @@ class MainActivity2 : AppCompatActivity() {
             //DEPURACION
             val editor = preferencias.edit()
 
-            editor.putInt("pulsoMinimo", 60)
-            editor.putInt("pulsoMaximo", 100)
-            editor.commit()
+            //editor.putInt("pulsoMinimo", 60)
+            //editor.putInt("pulsoMaximo", 100)
+            //editor.commit()
 
             //FINAL DEPURACION
 
@@ -81,6 +82,13 @@ class MainActivity2 : AppCompatActivity() {
                 return true
         }
         return false
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val referencia = viewModel.getReferenciaServicio()
+        if (referencia != null)
+            BackServiceSensors.stopService(this.applicationContext)
     }
 
 }

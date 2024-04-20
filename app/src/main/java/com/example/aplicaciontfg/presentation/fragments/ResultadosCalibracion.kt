@@ -35,7 +35,7 @@ class ResultadosCalibracion : Fragment() {
         if (pulsoMinimo != -1 && pulsoMaximo != -1){
 
             if (pulsoMinimo < pulsoMaximo){
-                val preferencias = requireActivity().getPreferences(Context.MODE_PRIVATE)
+                val preferencias = requireActivity().getSharedPreferences("preferences_datos",Context.MODE_PRIVATE)
                 val editor = preferencias.edit()
 
                 //actualizar los datos persistentes
