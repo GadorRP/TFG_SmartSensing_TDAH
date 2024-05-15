@@ -8,12 +8,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.aplicaciontfg.R
+import com.example.aplicaciontfgprototipo.R
 
 
 class MenuPrincipal : Fragment() {
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

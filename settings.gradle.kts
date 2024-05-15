@@ -14,6 +14,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AplicacionTFG"
+rootProject.name = "AplicacionTFGPrototipo"
 include(":app")
  

@@ -1,8 +1,6 @@
 package com.example.aplicaciontfg.presentation
 
-import android.app.Activity
 import android.hardware.SensorManager
-import android.util.Log
 import androidx.lifecycle.ViewModel
 
 class DatosViewModel : ViewModel() {
@@ -13,12 +11,10 @@ class DatosViewModel : ViewModel() {
 
     fun setSenManager(nuevoSensorManager: SensorManager) {
         sensorManager = nuevoSensorManager
-        Log.d("SenManager", sensorManager.toString())
     }
     fun getSenManager(): SensorManager? {
         return sensorManager
     }
-
 
     fun getPulsoMinimo(): Int {
         return pulsoMinimo

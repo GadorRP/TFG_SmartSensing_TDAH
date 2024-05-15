@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.aplicaciontfg.R
+import com.example.aplicaciontfgprototipo.R
 import com.example.aplicaciontfg.presentation.Estado
 
 
@@ -80,8 +80,6 @@ class ResultadosTest : Fragment() {
             else -> estadoFinalString  = Estado.DESCONOCIDO.toString()
         }
 
-        Log.d("valorEstadoInicialString" , estadoInicialString)
-        Log.d("valorEstadoFinalString" , estadoFinalString)
 
     }
 

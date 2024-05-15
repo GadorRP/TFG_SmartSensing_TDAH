@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.aplicaciontfg.R
+import com.example.aplicaciontfgprototipo.R
 import com.example.aplicaciontfg.presentation.DatosViewModel
 
 class ResultadosCalibracion : Fragment() {
@@ -28,9 +28,6 @@ class ResultadosCalibracion : Fragment() {
         pulsoMinimo = args.pulsoMinimo
         pulsoMaximo = args.pulsoMaximo
 
-        //DEPURACION
-        //pulsoMinimo = 80
-        //pulsoMaximo = 20
 
         if (pulsoMinimo != -1 && pulsoMaximo != -1){
 
@@ -61,7 +58,7 @@ class ResultadosCalibracion : Fragment() {
             textoPulsaciones.text = "No se ha calibrado correctamente"
         }
     }
-    @SuppressLint("MissingInflatedId")
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

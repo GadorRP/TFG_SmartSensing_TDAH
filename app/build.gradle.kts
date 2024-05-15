@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.aplicaciontfg"
+    namespace = "com.example.aplicaciontfgprototipo"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.aplicaciontfg"
+        applicationId = "com.example.aplicaciontfgprototipo"
         minSdk = 30
         targetSdk = 33
         versionCode = 1

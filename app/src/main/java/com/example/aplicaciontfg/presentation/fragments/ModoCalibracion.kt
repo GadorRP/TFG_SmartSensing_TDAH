@@ -15,7 +15,7 @@ import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
-import com.example.aplicaciontfg.R
+import com.example.aplicaciontfgprototipo.R
 import com.example.aplicaciontfg.presentation.DatosViewModel
 
 
@@ -26,7 +26,6 @@ class ModoCalibracion : Fragment() {
     private var obtenerValor = false
     private val viewModel : DatosViewModel by activityViewModels()
 
-    //private lateinit var actividad: Activity
     private lateinit var sensorManager : SensorManager
     private var sensorPulso : Sensor? = null
     private lateinit var textPulso : TextView
@@ -57,13 +56,13 @@ class ModoCalibracion : Fragment() {
 
         sensorManager = viewModel.getSenManager()!!
     }
-    @SuppressLint("MissingInflatedId")
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         //Registrar listener del sensor
-        sensorPulso = sensorManager!!.getDefaultSensor(Sensor.TYPE_HEART_RATE)
+        sensorPulso = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)
         sensorManager.registerListener(listenerPulso, sensorPulso, SensorManager.SENSOR_DELAY_NORMAL)
 
         // Inflate the layout for this fragment
@@ -79,7 +78,7 @@ class ModoCalibracion : Fragment() {
         pulsoMinimo.observe(viewLifecycleOwner) { nuevoValor ->
             if (nuevoValor != -1) {
                 textTitulo.text = "Vamos a movernos"
-                textsubtitulo.text = "Realiza 5 saltos y pulse Tomar Pulso"
+                textsubtitulo.text = "Salta durante 30 segundos y pulsa Tomar Pulso"
             }
         }
 
@@ -110,7 +109,7 @@ class ModoCalibracion : Fragment() {
     }
 
 
-    fun tomarPulso() {
+    private fun tomarPulso() {
         obtenerValor = true
     }
 
@@ -127,6 +126,5 @@ class ModoCalibracion : Fragment() {
         super.onResume()
         sensorManager.registerListener(listenerPulso, sensorPulso, SensorManager.SENSOR_DELAY_NORMAL)
     }*/
-
 
 }

@@ -21,7 +21,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.aplicaciontfg.R
+import com.example.aplicaciontfgprototipo.R
 import com.example.aplicaciontfg.presentation.DatosViewModel
 
 
@@ -47,20 +47,8 @@ class ModoTest : Fragment() {
     private val viewModel : DatosViewModel by activityViewModels()
 
     private val listenerPulso = object : SensorEventListener {
-        @SuppressLint("InvalidWakeLockTag")
-        override fun onSensorChanged(event: SensorEvent?) {
-            //Depuracion
-            if (event != null) {
-                Log.d("EventoTest" , event.values[0].toString())
-            }
 
-            if (event != null && event.values[0] > 70){
-                val powerManager = requireActivity().getSystemService(Context.POWER_SERVICE) as PowerManager
-                val wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "MyWakeLock")
-                wakeLock.acquire()
-                // Enciende la pantalla
-                wakeLock.release()
-            }
+        override fun onSensorChanged(event: SensorEvent?) {
 
             if (event != null && obtenerEvSensor && event.values[0] > 0){
                 obtenerEvSensor = false
@@ -71,10 +59,7 @@ class ModoTest : Fragment() {
                     pulsoFinal.value = event.values[0].toInt()
                     Log.d("valorPulsoFinal" , pulsoFinal.value.toString())
                 }
-
-                //obtenerEstado(event.values[0].toInt())
             }
-
         }
 
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
@@ -100,16 +85,15 @@ class ModoTest : Fragment() {
 
         textoPrincipal = root.findViewById<TextView>(R.id.tvTest1)
 
-        //era pulsoInicial y no pulsoInicial
-        pulsoInicial.observe(viewLifecycleOwner) { nuevoEstado ->
-            if (nuevoEstado != -1) {
+
+        pulsoInicial.observe(viewLifecycleOwner) { nuevoPulso ->
+            if (nuevoPulso != -1) {
                 textoPrincipal.text = "Al finalizar la prueba pulse Estado para terminar"
             }
         }
 
-        //era estado final y no pulsoFinal
-        pulsoFinal.observe(viewLifecycleOwner) { nuevoEstado ->
-            if (nuevoEstado != -1) {
+        pulsoFinal.observe(viewLifecycleOwner) { nuevoPulsoFinal ->
+            if (nuevoPulsoFinal != -1) {
                 stopListening()
                 obtenerEstado()
                 findNavController().navigate(ModoTestDirections.actionModoTestToResultadosTest(
@@ -140,13 +124,7 @@ class ModoTest : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //DEPURACION
-        //viewModel.setPulsoMaximo(111)
-        //viewModel.setPulsoMinimo(80)
-        //viewModel.setCalibrado(true)
 
-        Log.d("Pulso minimo",viewModel.getPulsoMinimo().toString())
-        Log.d("Pulso Maximo",viewModel.getPulsoMaximo().toString())
 
         calibrado = viewModel.getCalibrado();
 
@@ -168,10 +146,8 @@ class ModoTest : Fragment() {
             }
 
 
-            Log.d("valorRango" , rangoIntervalo.toString())
-
             //Registrar listener del sensor
-            sensorPulso = sensorManager!!.getDefaultSensor(Sensor.TYPE_HEART_RATE)
+            sensorPulso = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)
             sensorManager.registerListener(listenerPulso, sensorPulso,
                 SensorManager.SENSOR_DELAY_NORMAL)
 
@@ -238,48 +214,6 @@ class ModoTest : Fragment() {
 
     }
 
-    //CAMBIADO PARA NO HACERLO CON EL SENSOR
-    private fun obtenerEstado(valorPulso : Int) {
-        var estado = 0
-
-        for (i in pulsoMinimo..pulsoMaximo step rangoIntervalo){
-            if (valorPulso >= i && valorPulso < i + rangoIntervalo ){
-                if (estadoInicial.value == -1){
-                    estadoInicial.value = estado
-                    Log.d("valorPulsoInicial" , valorPulso.toString())
-                }
-                else{
-                    estadoFinal.value = estado
-                    Log.d("valorPulsoFinal" , valorPulso.toString())
-                }
-
-                return
-            }else if (valorPulso < pulsoMinimo){
-                if (estadoInicial.value == -1){
-                    estadoInicial.value = 0
-                }
-                else{
-                    estadoFinal.value = 0
-                }
-
-                return
-            }else if (valorPulso > pulsoMaximo){
-                if (estadoInicial.value == -1){
-                    estadoInicial.value = 4
-                }
-                else{
-                    estadoFinal.value = 4
-                }
-
-                return
-            }
-            else{
-                estado++
-            }
-        }
-
-    }
-
     private fun stopListening() {
         if (sensorPulso != null)
             sensorManager.unregisterListener(listenerPulso, sensorPulso)
@@ -294,6 +228,5 @@ class ModoTest : Fragment() {
         super.onResume()
         sensorManager.registerListener(listenerPulso, sensorPulso, SensorManager.SENSOR_DELAY_NORMAL)
     }**/
-
 
 }
