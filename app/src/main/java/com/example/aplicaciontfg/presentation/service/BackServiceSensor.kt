@@ -20,9 +20,8 @@ import com.example.aplicaciontfg.presentation.Estado
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-
 class BackServiceSensors : Service(), SensorEventListener {
-    private val CHANNEL_ID = "ForegroundService SmartSensing"
+    private val CHANNEL_ID = "Servicio SmartSensing"
     private var sensorManager: SensorManager? = null
     private var ultimaLectura: Float? = null
     private var hayDescanso = false
@@ -38,7 +37,7 @@ class BackServiceSensors : Service(), SensorEventListener {
     private val executorService = Executors.newSingleThreadScheduledExecutor()
 
     companion object {
-        fun startService(context: Context, descanso: Boolean, minDescanso : Int) {
+        fun startService(context: Context,descanso: Boolean, minDescanso : Int) {
             val startIntent = Intent(context, BackServiceSensors::class.java)
             startIntent.putExtra("infoDescanso", descanso)
             startIntent.putExtra("minDescanso", minDescanso)
@@ -127,11 +126,10 @@ class BackServiceSensors : Service(), SensorEventListener {
 
     private fun createNotificationChannel() {
         val serviceChannel = NotificationChannel(CHANNEL_ID,
-            "Smart Sensing Foreground Service",
+            "SmartSensing Foreground Service",
             NotificationManager.IMPORTANCE_DEFAULT)
         val manager = getSystemService(NotificationManager::class.java)
         manager!!.createNotificationChannel(serviceChannel)
-
     }
 
 
@@ -148,6 +146,8 @@ class BackServiceSensors : Service(), SensorEventListener {
             intent.putExtra("minDescanso", minDescanso)
             startActivity(intent)
         }
+
+        Log.d("Servicio", "Servicio acabado")
 
         Log.d("Servicio", "Servicio acabado")
     }
@@ -191,6 +191,7 @@ class BackServiceSensors : Service(), SensorEventListener {
             else -> estadoActual  = Estado.DESCONOCIDO
         }
 
+        Log.d("Estado obtenido en el servicio", estadoActual.toString())
         val intent = Intent("MensajeServicio") //FILTER is a string to identify this intent
         intent.putExtra("Estado", estadoActual.toString().lowercase())
         sendBroadcast(intent)

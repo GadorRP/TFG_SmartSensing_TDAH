@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#66B1ED"
+    android:background="#99FDFFB4"
     tools:context=".presentation.fragments.VerEstado">
 
     <FrameLayout
@@ -13,15 +13,14 @@
 
         <TextView
             android:id="@+id/textEstado"
-            android:layout_width="wrap_content"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
-            android:textSize="21sp"
+            android:text="Se está obteniendo tu estado"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:text="Se está obteniendo tu estado"
-            />
+            android:textSize="21sp" />
 
         <TextView
             android:id="@+id/subtextEstado"

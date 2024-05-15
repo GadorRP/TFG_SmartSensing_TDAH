@@ -25,7 +25,6 @@ class SelectorIntervalo : Fragment() {
     private var hayDescanso = false
     private var pulsaciones = -1
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -78,7 +77,6 @@ class SelectorIntervalo : Fragment() {
                     textoCheckBox.visibility = INVISIBLE
                     botonSiguiente.text = "finalizar"
                 }
-
 
             }
             //hay descanso, se obteniene la duracion

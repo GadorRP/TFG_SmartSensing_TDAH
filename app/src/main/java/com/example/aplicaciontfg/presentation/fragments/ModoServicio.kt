@@ -11,6 +11,8 @@ import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
@@ -30,10 +32,10 @@ class ModoServicio : Fragment() {
     private var minDescanso = -1
     private var hayDescanso = false
     private var sinFin = false
-    private var broadcastRegistrado : Intent ? = null
     private var ultimoEstado = Estado.DESCONOCIDO.toString()
     private val args : ModoServicioArgs by navArgs()
     private val viewModel : DatosViewModel by activityViewModels()
+
     private val receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             ultimoEstado = intent.getStringExtra("Estado").toString()
@@ -74,8 +76,20 @@ class ModoServicio : Fragment() {
 
         val botonEstado = root.findViewById<Button>(R.id.buttonEstadoSer)
 
+        val textEstado = root.findViewById<TextView>(R.id.textViewEstadoServicio)
+
         botonEstado.setOnClickListener {
-            subtexto.text = "Tu estado es $ultimoEstado"
+            subtexto.text = "Si acabas pulsa en finalizar"
+            textEstado.visibility = VISIBLE
+            textEstado.text = "Tu estado es $ultimoEstado"
+
+            // Ajusta el tiempo en segundos
+            val handler = Handler(Looper.getMainLooper())
+            val runnable = Runnable {
+                subtexto.text = "Si acabas pulsa en finalizar. Si quieres saber si estas nervioso pulsa en estado"
+                textEstado.visibility = INVISIBLE
+            }
+            handler.postDelayed(runnable, 5 * 1000)//5 segundos
         }
 
         if (viewModel.getReferenciaServicio() == null)
@@ -91,7 +105,7 @@ class ModoServicio : Fragment() {
         //creamos la referencia al servicio
         val context = requireActivity().applicationContext
 
-        var referenciaServicio = BackServiceSensors.startService(context, hayDescanso, minDescanso)
+        val referenciaServicio = BackServiceSensors.startService(context, hayDescanso, minDescanso)
         viewModel.setReferenciaServicio(referenciaServicio)
 
         if (!sinFin && !hayDescanso){
@@ -113,7 +127,7 @@ class ModoServicio : Fragment() {
             val handler = Handler(Looper.getMainLooper())
 
             val runnableSegundo = Runnable {
-                var referenciaServicio2 = BackServiceSensors.startService(context,descanso = false, minDescanso)
+                val referenciaServicio2 = BackServiceSensors.startService(context, hayDescanso, minDescanso)
                 viewModel.setReferenciaServicio(referenciaServicio2)
 
                 Log.d("Servicio con Descanso", "Comenzado segundo servicio")
@@ -130,7 +144,7 @@ class ModoServicio : Fragment() {
                         viewModel.setReferenciaServicio(null)
 
                         //crea la actividad de notificacion
-                        var intent = Intent(context, ActivityNotificacion::class.java)
+                        val intent = Intent(context, ActivityNotificacion::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         intent.putExtra("servicioTerminado", true)
                         startActivity(intent)
@@ -166,7 +180,7 @@ class ModoServicio : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        getActivity()?.unregisterReceiver(receiver);
+        activity?.unregisterReceiver(receiver);
     }
 
 }

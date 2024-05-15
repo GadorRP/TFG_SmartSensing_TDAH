@@ -1,6 +1,7 @@
 package com.example.aplicaciontfg.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -26,9 +27,6 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class VerEstado : Fragment() {
-    private var valorSensor = -1
-    private var vengoMenu = true
-    private val args : VerEstadoArgs by navArgs()
     private val executorService = Executors.newSingleThreadScheduledExecutor()
 
     private lateinit var sensorManager : SensorManager
@@ -69,7 +67,6 @@ class VerEstado : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        vengoMenu = args.MenuPrincipal
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_ver_estado, container, false)
 
@@ -81,10 +78,7 @@ class VerEstado : Fragment() {
 
         boton.setOnClickListener {
             stopListening()
-            if (vengoMenu)
-                findNavController().navigate(R.id.action_verEstado_to_menuPrincipal)
-            else
-                findNavController().navigate(R.id.action_verEstado_to_modoServicio)
+            findNavController().navigate(R.id.action_verEstado_to_menuPrincipal)
         }
 
         calibrado = viewModel.getCalibrado();
@@ -96,7 +90,7 @@ class VerEstado : Fragment() {
             calibrarMedicion()
 
             //Registrar listener del sensor
-            sensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_HEART_RATE)
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)
             sensorManager.registerListener(listenerPulso, sensor,
                 SensorManager.SENSOR_DELAY_NORMAL)
 
@@ -128,7 +122,7 @@ class VerEstado : Fragment() {
                 else
                     texto.text = "Tu estado actual es ${nuevoEstado.toString().lowercase()} "
 
-                if (nuevoEstado == Estado.EXCITADO ||nuevoEstado == Estado.MUY_EXCITADO){
+                if (nuevoEstado == Estado.EXCITADO || nuevoEstado == Estado.MUY_EXCITADO){
                     subTexto.text = "Intenta relajarte antes de estar con la tarea"
                 }else {
                     subTexto.text = "Es un buen estado para realizar las tareas"
@@ -142,7 +136,9 @@ class VerEstado : Fragment() {
             }
         }
         else {
-            texto.text = "Debes calibrar primero el reloj para esta funcion"
+            texto.text = "Debes calibrar primero el reloj"
+            subTexto.text = "Vuelve al menú principal"
+            texto.setTextColor(Color.RED)
         }
 
         return root
@@ -155,12 +151,12 @@ class VerEstado : Fragment() {
 
         for (i in pulsoMinimo..pulsoMaximo step rangoIntervalo){
             if (!asignado) {
-                if (pulsoActual!! >= i && pulsoActual!! < i + rangoIntervalo ) { //si esta en el intervalo
+                if (pulsoActual >= i && pulsoActual < i + rangoIntervalo ) { //si esta en el intervalo
                     if (estadoActualInt == -1) {
                         estadoActualInt = estado
                         asignado = true
                     }
-                }else if (pulsoActual!! <= pulsoMinimo){
+                }else if (pulsoActual <= pulsoMinimo){
                     if (estadoActualInt == -1){
                         estadoActualInt = 0
                         asignado = true
@@ -206,7 +202,7 @@ class VerEstado : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        sensorManager.unregisterListener(listenerPulso, sensor)
+        stopListening()
     }
 
     private fun stopListening() {

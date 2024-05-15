@@ -23,9 +23,6 @@
         android:label="fragment_menu_principal"
         tools:layout="@layout/fragment_menu_principal" >
         <action
-            android:id="@+id/action_menuPrincipal_to_modoTest"
-            app:destination="@id/modoTest" />
-        <action
             android:id="@+id/action_menuPrincipal_to_modoCalibracion"
             app:destination="@id/modoCalibracion"
             app:popUpToInclusive="false" />
@@ -45,28 +42,6 @@
             app:destination="@id/verEstado" />
     </fragment>
     <fragment
-        android:id="@+id/modoTest"
-        android:name="com.example.aplicaciontfg.presentation.fragments.ModoTest"
-        android:label="fragment_modo_test"
-        tools:layout="@layout/fragment_modo_test" >
-        <argument android:name="pulsoMinimo"
-            app:argType="integer"
-            android:defaultValue="-1" />
-        <argument android:name="pulsoMaximo"
-            app:argType="integer"
-            android:defaultValue="-1" />
-        <argument
-            android:name="calibrado"
-            app:argType="boolean"
-            android:defaultValue="false" />
-        <action
-            android:id="@+id/action_modoTest_to_menuPrincipal"
-            app:destination="@id/menuPrincipal" />
-        <action
-            android:id="@+id/action_modoTest_to_resultadosTest"
-            app:destination="@id/resultadosTest" />
-    </fragment>
-    <fragment
         android:id="@+id/resultadosCalibracion"
         android:name="com.example.aplicaciontfg.presentation.fragments.ResultadosCalibracion"
         android:label="fragment_resultados_calibracion"
@@ -80,30 +55,6 @@
             android:defaultValue="-1" />
         <argument
             android:name="pulsoMaximo"
-            app:argType="integer"
-            android:defaultValue="-1" />
-    </fragment>
-    <fragment
-        android:id="@+id/resultadosTest"
-        android:name="com.example.aplicaciontfg.presentation.fragments.ResultadosTest"
-        android:label="ResultadosTest" >
-        <argument
-            android:name="estadoInicial"
-            app:argType="integer"
-            android:defaultValue="-1" />
-        <argument
-            android:name="estadoFinal"
-            app:argType="integer"
-            android:defaultValue="-1" />
-        <action
-            android:id="@+id/action_resultadosTest_to_menuPrincipal"
-            app:destination="@id/menuPrincipal" />
-        <argument
-            android:name="pulsoInicial"
-            app:argType="integer"
-            android:defaultValue="-1" />
-        <argument
-            android:name="pulsoFinal"
             app:argType="integer"
             android:defaultValue="-1" />
     </fragment>
@@ -161,10 +112,6 @@
         android:name="com.example.aplicaciontfg.presentation.fragments.VerEstado"
         android:label="fragment_ver_estado"
         tools:layout="@layout/fragment_ver_estado" >
-        <argument
-            android:name="MenuPrincipal"
-            app:argType="boolean"
-            android:defaultValue="true" />
         <action
             android:id="@+id/action_verEstado_to_modoServicio"
             app:destination="@id/modoServicio" />

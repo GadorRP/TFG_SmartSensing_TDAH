@@ -61,7 +61,7 @@ class ResultadosCalibracion : Fragment() {
             textoPulsaciones.text = "No se ha calibrado correctamente"
         }
     }
-    @SuppressLint("MissingInflatedId")
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

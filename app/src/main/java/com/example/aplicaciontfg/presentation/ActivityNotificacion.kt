@@ -39,7 +39,6 @@ class ActivityNotificacion : AppCompatActivity() {
         minDescanso = intent.getIntExtra("minDescanso", -1)
         servicioTerminado = intent.getBooleanExtra("servicioTerminado", false)
 
-
         setShowWhenLocked(true)
         setTurnScreenOn(true)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -52,12 +51,9 @@ class ActivityNotificacion : AppCompatActivity() {
             vibrator = vibratorManager.defaultVibrator
         }
 
-        // Vibra al iniciar la actividad
+        // Definimos duracion de la vibracion
         val duracion = 200L
 
-        if (vibrator != null ) {
-            vibrator!!.vibrate(VibrationEffect.createOneShot(duracion, VibrationEffect.DEFAULT_AMPLITUDE))
-        }
 
         //obtenemos el titulo y el subtitulo de la pantalla
         val titulo = findViewById<TextView>(R.id.tituloNot)
@@ -97,6 +93,11 @@ class ActivityNotificacion : AppCompatActivity() {
             // Finaliza la actividad
             finish()
         }, duracionActividad.toLong()) // 10 segundos
+
+        //Realizamos una vibracion al empezar la actividad
+        if (vibrator != null ) {
+            vibrator!!.vibrate(VibrationEffect.createOneShot(duracion, VibrationEffect.DEFAULT_AMPLITUDE))
+        }
     }
 
 }
