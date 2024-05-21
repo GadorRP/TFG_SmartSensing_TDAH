@@ -149,7 +149,6 @@ class BackServiceSensors : Service(), SensorEventListener {
 
         Log.d("Servicio", "Servicio acabado")
 
-        Log.d("Servicio", "Servicio acabado")
     }
 
     private fun obtenerEstado() {

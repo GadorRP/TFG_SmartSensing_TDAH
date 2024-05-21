@@ -1,7 +1,7 @@
 package com.example.aplicaciontfg.presentation
 
 import android.Manifest
-import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.hardware.SensorManager
 import android.os.Bundle
@@ -9,6 +9,8 @@ import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.example.aplicaciontfg.R
 import com.example.aplicaciontfg.presentation.service.BackServiceSensors
 
@@ -20,7 +22,8 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.FOREGROUND_SERVICE)
     private val viewModel : DatosViewModel by viewModels()
 
-    val requestPermissionLauncher =
+
+    private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
@@ -45,7 +48,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (permisosDados){
-            val preferencias = getSharedPreferences("preferences_datos",Context.MODE_PRIVATE)
+            var masterKey: MasterKey = MasterKey.Builder(this)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+
+            var preferencias: SharedPreferences = EncryptedSharedPreferences.create(
+                this,
+                "preferences_datos",
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
 
             //DEPURACION
             //val editor = preferencias.edit()
@@ -90,6 +103,6 @@ class MainActivity : AppCompatActivity() {
         if (referencia != null)
             BackServiceSensors.stopService(this.applicationContext)
     }
-
+    
 }
 
