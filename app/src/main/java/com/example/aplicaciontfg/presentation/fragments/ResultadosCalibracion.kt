@@ -3,6 +3,7 @@ package com.example.aplicaciontfg.presentation.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.example.aplicaciontfg.R
 import com.example.aplicaciontfg.presentation.DatosViewModel
 
@@ -35,13 +38,28 @@ class ResultadosCalibracion : Fragment() {
         if (pulsoMinimo != -1 && pulsoMaximo != -1){
 
             if (pulsoMinimo < pulsoMaximo){
-                val preferencias = requireActivity().getPreferences(Context.MODE_PRIVATE)
+
+                // Obtengo la llave maestra de la actividad
+                val masterKey = MasterKey.Builder(requireActivity())
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build()
+
+                // Obtengo las preferencias encriptadas con el contexto de la actividad
+                val preferencias = EncryptedSharedPreferences.create(
+                    requireActivity(),
+                    "preferences_datos",
+                    masterKey,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                )
+
                 val editor = preferencias.edit()
 
                 //actualizar los datos persistentes
                 editor.putInt("pulsoMinimo", pulsoMinimo)
                 editor.putInt("pulsoMaximo", pulsoMaximo)
                 editor.commit()
+
 
                 //actualizar viewmodel
                 viewModel.setPulsoMinimo(pulsoMinimo)
@@ -61,7 +79,7 @@ class ResultadosCalibracion : Fragment() {
             textoPulsaciones.text = "No se ha calibrado correctamente"
         }
     }
-    @SuppressLint("MissingInflatedId")
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

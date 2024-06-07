@@ -5,6 +5,7 @@ plugins {
     id ("androidx.navigation.safeargs.kotlin")
 }
 
+
 android {
     namespace = "com.example.aplicaciontfg"
     compileSdk = 34
@@ -40,6 +41,7 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
 
     }
     composeOptions {
@@ -50,10 +52,13 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 dependencies {
-    implementation ("androidx.navigation:navigation-compose:2.5.0")
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    implementation("com.github.gildaswise:HorizontalCounter:1.3.0")
+    implementation("androidx.navigation:navigation-compose:2.5.0")
     implementation("androidx.activity:activity-ktx:1.5.0")
     implementation("androidx.navigation:navigation-fragment:2.7.6")
     implementation("androidx.navigation:navigation-ui:2.7.6")
@@ -77,6 +82,8 @@ dependencies {
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.wear:wear:1.3.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))

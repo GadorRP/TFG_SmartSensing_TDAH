@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_dynamic_primary80"
-    tools:context=".presentation.fragments.ResultadosTest"
-    >
+    android:background="#66B1ED"
+    tools:context=".presentation.fragments.MenuPrincipal">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -13,36 +11,26 @@
         android:padding="5dp">
 
         <TextView
-            android:id="@+id/tvTituloTest"
+            android:id="@+id/tituloNot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="45dp"
-            android:textSize="18sp"
+            android:textSize="25sp"
+            android:textAlignment="center"
             android:textColor="@color/black"
-            android:text="Resultados tras el Test" />
+            android:text="Estás demasiado nervioso" />
 
         <TextView
-            android:id="@+id/tvResultadosTest"
+            android:id="@+id/subTituloNot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:textSize="18sp"
-            android:textAlignment="center"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="110dp"
+            android:textSize="20sp"
+            android:textAlignment="center"
             android:textColor="@color/black"
-            android:text="Estado Inicial:
-                          Estado Final: " />
-
-        <Button
-            android:id="@+id/buttonVolverTest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="60dp"
-            android:text="Volver" />
-
-
+            android:text="Intenta relajarte y continua con la tarea" />
     </FrameLayout>
 
 </androidx.wear.widget.BoxInsetLayout>

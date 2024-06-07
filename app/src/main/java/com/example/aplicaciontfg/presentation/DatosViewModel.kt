@@ -1,6 +1,5 @@
 package com.example.aplicaciontfg.presentation
 
-import android.app.Activity
 import android.hardware.SensorManager
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -10,6 +9,7 @@ class DatosViewModel : ViewModel() {
     private var pulsoMaximo = -1
     private var calibrado = false
     private var sensorManager: SensorManager? = null
+    private var referenciaServicio : Unit? = null
 
     fun setSenManager(nuevoSensorManager: SensorManager) {
         sensorManager = nuevoSensorManager
@@ -42,6 +42,14 @@ class DatosViewModel : ViewModel() {
 
     fun setCalibrado(nuevoCalibrado : Boolean) {
         calibrado = nuevoCalibrado
+    }
+
+    fun getReferenciaServicio(): Unit? {
+        return referenciaServicio
+    }
+
+    fun setReferenciaServicio(referencia: Unit?){
+        referenciaServicio = referencia
     }
 
 }

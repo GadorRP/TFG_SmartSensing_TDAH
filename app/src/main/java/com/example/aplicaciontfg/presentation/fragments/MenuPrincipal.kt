@@ -13,7 +13,6 @@ import com.example.aplicaciontfg.R
 
 class MenuPrincipal : Fragment() {
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -21,10 +20,10 @@ class MenuPrincipal : Fragment() {
         val root = inflater.inflate(R.layout.fragment_menu_principal, container, false)
 
         //Boton para test
-        val botonTest = root.findViewById<Button>(R.id.buttonTest)
+        val botonVerEstado = root.findViewById<Button>(R.id.buttonVerEstado)
 
-        botonTest.setOnClickListener {
-            findNavController().navigate(R.id.action_menuPrincipal_to_modoTest)
+        botonVerEstado.setOnClickListener {
+            findNavController().navigate(R.id.action_menuPrincipal_to_verEstado)
         }
 
         //Boton para calibrar
@@ -34,7 +33,15 @@ class MenuPrincipal : Fragment() {
             findNavController().navigate(R.id.action_menuPrincipal_to_modoCalibracion)
         }
 
+        //Boton para estudio
+        val botonEstudio = root.findViewById<Button>(R.id.buttonEstudio)
+
+        botonEstudio.setOnClickListener {
+            findNavController().navigate(R.id.action_menuPrincipal_to_modoEstudio)
+        }
+
         return root
     }
+
 
 }

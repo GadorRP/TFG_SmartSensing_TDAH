@@ -1,0 +1,70 @@
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#66B1ED"
+    tools:context=".presentation.fragments.ModoServicio">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/textServicio"
+            android:layout_width="wrap_content"
+            android:layout_height="110dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
+            android:textSize="21sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:text="Se ha comenzado la tarea. Concéntrate."
+            />
+
+        <TextView
+            android:id="@+id/subtextServicio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="75dp"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:text= "Si acabas pulsa en finalizar. Si quieres saber si estas nervioso pulsa en estado"
+            />
+
+
+        <Button
+            android:id="@+id/buttonFinalServ"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="135dp"
+            android:layout_marginLeft="-40dp"
+            android:text="Finalizar" />
+
+        <Button
+            android:id="@+id/buttonEstadoSer"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="135dp"
+            android:layout_marginRight="-50dp"
+            android:text="Estado" />
+
+        <TextView
+            android:id="@+id/textViewEstadoServicio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Tu estado es el que se obtenga"
+            android:textColor="@color/black"
+            android:visibility="invisible"
+            android:textSize="16sp"/>
+
+    </FrameLayout>
+
+</androidx.wear.widget.BoxInsetLayout>
