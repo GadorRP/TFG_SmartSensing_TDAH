@@ -1,5 +1,5 @@
 # TFG_SmartSensing_TDAH
-##Sistema de detección de actividades y planificación del tiempo mediante smartwatch para niños con TDAH.
+## Sistema de detección de actividades y planificación del tiempo mediante smartwatch para niños con TDAH.
 
 Trabajo de Fin de Grado de Gádor Romero Prieto.
 
